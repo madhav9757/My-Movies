@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-    age: {
-        type: Number,
-        min: 0
-    }
 },
 
     { timestamps: true }

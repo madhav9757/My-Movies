@@ -4,6 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/database.js"; 
 import userRoutes from "./routes/userRoutes.js"; 
+import genreRoutes from "./routes/genreRoutes.js" ;
 import mongoose from "mongoose"; 
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 // --- API Routes ---
 app.use('/api/users', userRoutes);
+app.use('/api/genre', genreRoutes) ;
 
 // --- Basic Home Route (Optional) ---
 app.get('/', (req, res) => {
