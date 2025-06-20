@@ -11,7 +11,7 @@ const GenreList = () => {
     if (window.confirm('Are you sure you want to delete this genre?')) {
       try {
         await deleteGenre(id);
-        refetch(); // Refresh the list
+        refetch(); 
       } catch (err) {
         console.error('Failed to delete genre:', err);
       }
