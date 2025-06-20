@@ -14,6 +14,7 @@ import './index.css';
 
 import AdminRoute from './pages/admin/adminRoute.jsx';
 import GenreList from './pages/admin/genres.jsx';
+import GenreCreate from './components/genreForm.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
 
       <Route element={<AdminRoute />}>
         <Route path="admin/genres" element={<GenreList />} />
+        <Route path="admin/genres/new" element={<GenreCreate />} />
       </Route>
     </Route>
   )

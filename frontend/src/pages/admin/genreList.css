@@ -1,61 +1,130 @@
-.genre-list-container {
+.genre-list-grid-container {
   padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.genre-list-header {
+.genre-list-grid-container h2 {
+  font-size: 1.8rem;
+  color: #4f46e5;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+.genre-card {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.genre-card:hover {
+  background-color: #e0e7ff;
+  transform: translateY(-4px);
+}
+
+.genre-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.genre-card p {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.genre-card-actions {
+  margin-top: 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.genre-list-header h2 {
-  margin: 0;
+.edit-btn,
+.delete-btn {
+  border: none;
+  background: none;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
-.add-genre-btn {
-  background-color: #4f46e5;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
+.edit-btn:hover {
+  color: #2563eb;
 }
 
-.genre-table {
+.delete-btn:hover {
+  color: #dc2626;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.genre-table th, .genre-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-.edit-btn, .delete-btn {
-  margin-right: 0.5rem;
-  padding: 0.4rem 0.7rem;
+.modal h3 {
+  margin-bottom: 1rem;
+  color: #4f46e5;
+  text-align: center;
+}
+
+.modal input,
+.modal textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
+  font-size: 0.95rem;
 }
 
-.edit-btn {
-  background-color: #3b82f6;
-  color: white;
-  text-decoration: none;
-}
-
-.delete-btn {
-  background-color: #ef4444;
+.modal-actions button[type='submit'] {
+  background-color: #4f46e5;
   color: white;
 }
 
-.error {
-  color: red;
-  margin-top: 1rem;
+.cancel-btn {
+  background-color: #e5e7eb;
+}
+.modal-actions .cancel-btn {
+  color: #374151;
 }

@@ -1,58 +1,102 @@
-import React from 'react';
-import { useGetGenresQuery, useDeleteGenreMutation } from '../../redux/api/genre';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import {
+  useGetGenresQuery,
+  useDeleteGenreMutation,
+  useUpdateGenreMutation,
+} from '../../redux/api/genre';
 import './genreList.css';
 
 const GenreList = () => {
   const { data: genres, isLoading, error, refetch } = useGetGenresQuery();
   const [deleteGenre] = useDeleteGenreMutation();
+  const [updateGenre] = useUpdateGenreMutation();
+
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [updateForm, setUpdateForm] = useState({ name: '', description: '' });
+
+  const openEditModal = (genre) => {
+    setSelectedGenre(genre);
+    setUpdateForm({ name: genre.name, description: genre.description });
+  };
+
+  const closeModal = () => setSelectedGenre(null);
+
+  const handleUpdateChange = (e) => {
+    setUpdateForm({ ...updateForm, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateGenre({ genreId: selectedGenre._id, ...updateForm }).unwrap();
+      closeModal();
+      refetch();
+    } catch (err) {
+      console.error('Update failed', err);
+    }
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this genre?')) {
-      try {
-        await deleteGenre(id);
-        refetch(); 
-      } catch (err) {
-        console.error('Failed to delete genre:', err);
-      }
+    if (window.confirm('Delete this genre?')) {
+      await deleteGenre(id);
+      refetch();
     }
   };
 
   return (
-    <div className="genre-list-container">
-      <div className="genre-list-header">
-        <h2>🎭 Genre Management</h2>
-        <Link to="/admin/genres/new" className="add-genre-btn">➕ Add Genre</Link>
-      </div>
+    <div className="genre-list-grid-container">
+      <h2>🎬 Genres</h2>
 
       {isLoading ? (
-        <p>Loading genres...</p>
+        <p>Loading...</p>
       ) : error ? (
-        <p className="error">Error fetching genres</p>
+        <p>Error loading genres.</p>
       ) : (
-        <table className="genre-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Slug</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {genres?.map((genre) => (
-              <tr key={genre._id}>
-                <td>{genre.name}</td>
-                <td>{genre.slug}</td>
-                <td>{genre.description}</td>
-                <td>
-                  <Link to={`/admin/genres/${genre._id}/edit`} className="edit-btn">✏️ Edit</Link>
-                  <button onClick={() => handleDelete(genre._id)} className="delete-btn">🗑️ Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="genre-grid">
+          {genres.map((genre) => (
+            <div className="genre-card" key={genre._id}>
+              <h3>{genre.name}</h3>
+              {genre.description && <p>{genre.description}</p>}
+              <div className="genre-card-actions">
+                <button onClick={() => openEditModal(genre)} className="edit-btn">
+                  ✏️
+                </button>
+                <button onClick={() => handleDelete(genre._id)} className="delete-btn">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {selectedGenre && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h3>Update Genre</h3>
+            <form onSubmit={handleUpdateSubmit}>
+              <input
+                type="text"
+                name="name"
+                value={updateForm.name}
+                onChange={handleUpdateChange}
+                required
+              />
+              <textarea
+                name="description"
+                value={updateForm.description}
+                onChange={handleUpdateChange}
+                rows={3}
+              />
+              <div className="modal-actions">
+                <button type="submit">Update</button>
+                <button type="button" onClick={closeModal} className="cancel-btn">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

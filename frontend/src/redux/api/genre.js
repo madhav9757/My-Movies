@@ -14,10 +14,10 @@ export const genreApiSlice = apiSlice.injectEndpoints({
     }),
     // Update genre
     updateGenre: builder.mutation({
-      query: (genreData) => ({
+      query: ({ genreId, ...body }) => ({
         url: `${GENRE_URL}/${genreId}`,
         method: 'PUT',
-        body: genreData,
+        body,
       }), 
     }),
 
