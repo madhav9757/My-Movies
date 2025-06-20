@@ -6,6 +6,7 @@ import connectToDatabase from "./config/database.js";
 import userRoutes from "./routes/userRoutes.js"; 
 import genreRoutes from "./routes/genreRoutes.js" ;
 import moviesRoutes from "./routes/moviesRoutes.js";
+import uploadRoutes from './routes/uploadRoutes.js';
 import mongoose from "mongoose"; 
 
 dotenv.config();
@@ -22,11 +23,14 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/genre', genreRoutes);
 app.use('/api/movies', moviesRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // --- Basic Home Route (Optional) ---
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
+// --- Static File Serving ---
+app.use('/uploads', express.static(path.join('uploads')));
 
 // --- Error Handling Middleware ---
 app.use((err, req, res, next) => {
