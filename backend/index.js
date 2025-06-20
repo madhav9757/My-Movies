@@ -1,23 +1,27 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from 'url';
 import cookieParser from "cookie-parser";
-import connectToDatabase from "./config/database.js"; 
-import userRoutes from "./routes/userRoutes.js"; 
-import genreRoutes from "./routes/genreRoutes.js" ;
+import connectToDatabase from "./config/database.js";
+import userRoutes from "./routes/userRoutes.js";
+import genreRoutes from "./routes/genreRoutes.js";
 import moviesRoutes from "./routes/moviesRoutes.js";
 import uploadRoutes from './routes/uploadRoutes.js';
-import mongoose from "mongoose"; 
+import mongoose from "mongoose";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // --- Middleware ---
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
-app.use(cookieParser()); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // --- API Routes ---
 app.use('/api/users', userRoutes);
@@ -30,11 +34,11 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 // --- Static File Serving ---
-app.use('/uploads', express.static(path.join('uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // --- Error Handling Middleware ---
 app.use((err, req, res, next) => {
-    console.error(err.stack); 
+    console.error(err.stack);
 
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     res.status(statusCode);
@@ -60,12 +64,12 @@ connectToDatabase()
         });
 
         app.listen(PORT, () => {
-            console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+            console.log(`Server running in ${process.env.NODE_ENV} mode on port http://localhost:${PORT}`);
         });
     })
     .catch((err) => {
         console.error("Failed to connect to MongoDB and start server:", err);
-        process.exit(1); 
+        process.exit(1);
     });
 
 process.on('SIGINT', async () => {

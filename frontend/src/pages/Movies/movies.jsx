@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useGetMoviesQuery, useDeleteMovieMutation } from '../../redux/api/movies.js';
 import { Link } from 'react-router-dom';
 import './movies.css';
-import placeholder from '../../../../uploads/placeholder.jpg';
 
 const Movies = () => {
   const { data: movies = [], isLoading, error, refetch } = useGetMoviesQuery();
@@ -47,10 +46,15 @@ const Movies = () => {
             filteredMovies.map((movie) => (
               <div className="movie-card" key={movie._id}>
                 <img
-                  src={movie.image || placeholder}
-                  alt={movie.title}
+                  src={
+                    movie.image?.startsWith('https') || movie.image?.startsWith('/upload')
+                      ? movie.image
+                      : `http://localhost:3000${movie.image}`
+                  }
                   onError={(e) => (e.target.src = '/placeholder.jpg')}
+                  alt={movie.title}
                 />
+
                 <div className="movie-info">
                   <h3>{movie.title}</h3>
                   <p>{movie.rating ? `⭐ ${movie.rating}` : 'No rating yet'}</p>
