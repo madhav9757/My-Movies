@@ -5,6 +5,8 @@ import {
   useUpdateGenreMutation,
 } from '../../redux/api/genre';
 import './genreList.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const GenreList = () => {
   const { data: genres, isLoading, error, refetch } = useGetGenresQuery();
@@ -13,6 +15,13 @@ const GenreList = () => {
 
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [updateForm, setUpdateForm] = useState({ name: '', description: '' });
+
+  const navigate = useNavigate();
+
+  const handleGenreClick = (genreId) => {
+    navigate(`/genres/${genreId}/movies`);
+  };
+
 
   const openEditModal = (genre) => {
     setSelectedGenre(genre);
@@ -54,7 +63,11 @@ const GenreList = () => {
       ) : (
         <div className="genre-grid">
           {genres.map((genre) => (
-            <div className="genre-card" key={genre._id}>
+            <div className="genre-card"
+              onClick={() => handleGenreClick(genre._id)}
+              style={{ cursor: 'pointer' }}
+              key={genre._id}
+            >
               <h3>{genre.name}</h3>
               {genre.description && <p>{genre.description}</p>}
               <div className="genre-card-actions">

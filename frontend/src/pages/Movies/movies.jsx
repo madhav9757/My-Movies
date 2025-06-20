@@ -47,7 +47,7 @@ const Movies = () => {
               <div className="movie-card" key={movie._id}>
                 <img
                   src={
-                    movie.image?.startsWith('https') || movie.image?.startsWith('/upload')
+                    movie.image?.startsWith('https') || movie.image?.startsWith('upload')
                       ? movie.image
                       : `http://localhost:3000${movie.image}`
                   }
