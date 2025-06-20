@@ -1,6 +1,5 @@
 import { apiSlice } from './apiSlice';
 import { GENRE_URL } from '../constants';
-import { update } from '../features/auth/authSlice';
 
 export const genreApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

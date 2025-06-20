@@ -5,15 +5,20 @@ import {
   createMovie,
   updateMovie,
   deleteMovie,
+  movieReviews
 } from '../controllers/moviesController.js';
 
 import { protect, admin } from '../middlewares/authMiddleware.js';
+import checkId from '../middlewares/checkId.js';
 
 const router = express.Router();
 
 // Public
 router.get('/', getMovies);
 router.get('/:id', getMovieById);
+
+// Restricted (requires authentication)
+router.post('/:id/reviews', protect, checkId, movieReviews);  
 
 // Protected (admin only)
 router.post('/', protect, admin, createMovie);

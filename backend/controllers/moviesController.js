@@ -83,10 +83,46 @@ const deleteMovie = asyncHandler(async (req, res) => {
   }
 });
 
+const movieReviews = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+  const movie = await Movie.findById(req.params.id);
+
+  if (movie) {
+    // prevent duplicate review by same user (optional)
+    const alreadyReviewed = movie.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400);
+      throw new Error('You have already reviewed this movie');
+    }
+
+    const review = {
+      user: req.user._id,
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+    };
+
+    movie.reviews.push(review);
+    movie.numReviews = movie.reviews.length;
+    movie.averageRating =
+      movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
+
+    await movie.save();
+    res.status(201).json({ message: 'Review added' });
+  } else {
+    res.status(404);
+    throw new Error('Movie not found');
+  }
+});
+
 export {
   getMovies,
   getMovieById,
   createMovie,
   updateMovie,
   deleteMovie,
+  movieReviews
 };
