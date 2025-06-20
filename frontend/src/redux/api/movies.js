@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import { MOVIE_URL } from "../constants";
+import { MOVIE_URL, UPLOAD_URL } from "../constants";
 
 export const movieApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -48,8 +48,18 @@ export const movieApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Movie'],
     }),
+
+    uploadMovieImage: builder.mutation({
+      query: (formData) => ({
+        url: `${UPLOAD_URL}`,
+        method: 'POST',
+        body: formData,
+        // ⚠️ Let the browser set `Content-Type` for FormData
+      }),
+    }),
   }),
 });
+
 
 export const {
   useGetMoviesQuery,
@@ -57,4 +67,5 @@ export const {
   useCreateMovieMutation,
   useUpdateMovieMutation,
   useDeleteMovieMutation,
+  useUploadMovieImageMutation
 } = movieApiSlice;

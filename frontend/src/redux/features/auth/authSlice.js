@@ -61,7 +61,7 @@ export const update = createAsyncThunk(
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(userData),
       });
@@ -162,7 +162,7 @@ const authSlice = createSlice({
         state.userInfo = null;
       })
       .addCase(update.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.userInfo = action.payload;
         state.isSuccess = true;
         state.isLoading = false;
       })
