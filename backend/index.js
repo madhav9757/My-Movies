@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/database.js"; 
 import userRoutes from "./routes/userRoutes.js"; 
 import genreRoutes from "./routes/genreRoutes.js" ;
+import moviesRoutes from "./routes/moviesRoutes.js";
 import mongoose from "mongoose"; 
 
 dotenv.config();
@@ -19,7 +20,8 @@ app.use(cookieParser());
 
 // --- API Routes ---
 app.use('/api/users', userRoutes);
-app.use('/api/genre', genreRoutes) ;
+app.use('/api/genre', genreRoutes);
+app.use('/api/movies', moviesRoutes);
 
 // --- Basic Home Route (Optional) ---
 app.get('/', (req, res) => {
