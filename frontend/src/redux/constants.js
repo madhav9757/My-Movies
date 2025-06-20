@@ -1,2 +1,3 @@
-export const BASE_URL = '/api';         // or 'http://localhost:5000/api' for dev
+export const BASE_URL = '/api';         
 export const USERS_URL = '/users';
+export const GENRE_URL = '/genre';

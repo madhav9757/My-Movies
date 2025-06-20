@@ -12,6 +12,9 @@ import EditProfile from './pages/user/editProfile.jsx';
 import store from './redux/store.js';
 import './index.css';
 
+import AdminRoute from './pages/admin/adminRoute.jsx';
+import GenreList from './pages/admin/genres.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -19,7 +22,11 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<Signup />} />
       <Route path="profile" element={<Profile />} />
-      <Route path='/profile/edit' element={<EditProfile />} />
+      <Route path="profile/edit" element={<EditProfile />} />
+
+      <Route element={<AdminRoute />}>
+        <Route path="admin/genres" element={<GenreList />} />
+      </Route>
     </Route>
   )
 );
