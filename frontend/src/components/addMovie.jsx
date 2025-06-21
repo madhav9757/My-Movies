@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   useCreateMovieMutation,
   useUploadMovieImageMutation,
@@ -20,6 +20,7 @@ const AddMovie = () => {
 
   const [preview, setPreview] = useState('');
   const navigate = useNavigate();
+  const fileInputRef = useRef();
 
   const [createMovie] = useCreateMovieMutation();
   const [uploadImage] = useUploadMovieImageMutation();
@@ -32,17 +33,23 @@ const AddMovie = () => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
       const formData = new FormData();
       formData.append('image', file);
 
       try {
         const res = await uploadImage(formData).unwrap();
-        setForm({ ...form, image: res.image });
+        setForm((prev) => ({ ...prev, image: res.image }));
+        setPreview(res.image.startsWith('http') ? res.image : `http://localhost:3000${res.image}`);
       } catch (err) {
         console.error('Upload failed', err);
       }
     }
+  };
+
+  const handleImageURLChange = (e) => {
+    const url = e.target.value;
+    setForm({ ...form, image: url });
+    setPreview(url);
   };
 
   const handleSubmit = async (e) => {
@@ -112,8 +119,25 @@ const AddMovie = () => {
           onChange={handleChange}
         />
 
-        <label>Upload Poster</label>
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        <div className="image-input-wrapper">
+          <button type="button" onClick={() => fileInputRef.current.click()} className="file-icon-button">
+            📁
+          </button>
+          <input
+            type="text"
+            placeholder="Paste image URL or choose file"
+            value={form.image.startsWith('http') ? form.image : ''}
+            onChange={handleImageURLChange}
+            className="image-url-input"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+          />
+        </div>
         {preview && <img src={preview} alt="Preview" className="preview-image" />}
 
         <button type="submit">Create Movie</button>

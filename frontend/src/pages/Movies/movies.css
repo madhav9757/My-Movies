@@ -31,7 +31,7 @@
   border-radius: 0.5rem;
   font-size: 1rem;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .add-movie-btn {
@@ -55,37 +55,49 @@
 }
 
 .movie-card {
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 260px;
-  display: flex;
-  flex-direction: column;
+  border-radius: 1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .movie-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
 .movie-poster {
   width: 100%;
-  height: 380px;
+  height: 360px;
   object-fit: cover;
+  display: block;
+  transition: filter 0.3s;
+}
+
+.movie-card:hover .movie-poster {
+  filter: brightness(50%);
 }
 
 .movie-details {
+  position: absolute;
+  bottom: -100px;
+  left: 0;
+  width: 100%;
   padding: 1rem;
-  flex: 1;
+  color: white;
+  text-align: center;
+  background: transparent;
+  transition: bottom 0.3s ease;
+}
+
+.movie-card:hover .movie-details {
+  bottom: 0;
 }
 
 .movie-title {
   font-size: 1.1rem;
   font-weight: 600;
-  margin: 0;
-  color: #111827;
+  margin-bottom: 0.5rem;
 }
 
 .genre-badge {
@@ -93,59 +105,35 @@
   background-color: #e0f2fe;
   color: #0284c7;
   font-size: 0.85rem;
+  font-weight: 600;
   padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  border-radius: 5px;
   margin-top: 0.5rem;
+  margin-right: 0.5rem; /* Add spacing between genre and rating */
 }
 
 .rating {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  font-size: 0.9rem;
-  margin-top: 0.6rem;
-  color: #f59e0b;
-}
-
-.movie-actions {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  border-top: 1px solid #f1f5f9;
-  background: #fafafa;
-}
-
-.edit-btn,
-.delete-btn {
+  background-color: #fef3c7;
+  color: #b45309;
   font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  text-decoration: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.meta-info {
   display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-weight: 500;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
-.edit-btn {
-  background: #e0f2fe;
-  color: #0284c7;
-  border: none;
-}
-
-.edit-btn:hover {
-  background: #bae6fd;
-}
-
-.delete-btn {
-  background: #fee2e2;
-  color: #b91c1c;
-  border: none;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
+.no-movies {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6b7280;
+  padding: 2rem 0;
 }
 
 @media (max-width: 600px) {
@@ -157,9 +145,5 @@
   .movies-actions input,
   .add-movie-btn {
     width: 100%;
-  }
-
-  .movie-actions {
-    flex-direction: column;
   }
 }

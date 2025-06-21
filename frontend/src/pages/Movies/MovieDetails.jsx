@@ -39,6 +39,14 @@ const MovieDetails = () => {
         <p><strong>Rating:</strong> ⭐ {movie.rating}</p>
         <p><strong>Description:</strong> {movie.description}</p>
         <p><strong>Genre:</strong> {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}</p>
+        {movie.reviews.map((review) => (
+          <div key={review._id} className="review-card">
+            <h4>{review.name}</h4>
+            <p>⭐ {review.rating}</p>
+            <p>{review.comment}</p>
+            <span>{new Date(review.createdAt).toLocaleDateString()}</span>
+          </div>
+        ))}
 
         <div className="movie-detail-actions">
           <button onClick={() => navigate(`/movies/edit/${movie._id}`)} className="edit-btn">

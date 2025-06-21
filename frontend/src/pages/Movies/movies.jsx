@@ -56,12 +56,14 @@ const Movies = () => {
 
                 <div className="movie-details">
                   <h3 className="movie-title">{movie.title}</h3>
-                  <span className="genre-badge">
-                    {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}
-                  </span>
-                  <div className="rating">
-                    <span>⭐</span>
-                    <span>{movie.rating || 'N/A'}</span>
+                  <div className='meta-info'>
+                    <span className="genre-badge">
+                      {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}
+                    </span>
+                    <div className="rating">
+                      <span>⭐</span>
+                      <span>{movie.rating || 'N/A'}</span>
+                    </div>
                   </div>
                 </div>
               </div>
