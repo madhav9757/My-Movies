@@ -17,6 +17,7 @@ import GenreList from './pages/admin/genres.jsx';
 import GenreCreate from './components/genreForm.jsx';
 import Movies from './pages/Movies/movies.jsx';
 import AddMovie from './components/addmovie.jsx';
+import EditMovie from './components/editMovie.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
       <Route>
         <Route path="/movies" element={<Movies />} />
         <Route path="/movies/add" element={<AddMovie />} />
+        <Route path="/movies/edit/:id" element={<EditMovie />} />
       </Route>
     </Route>
   )

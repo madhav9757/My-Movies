@@ -41,6 +41,12 @@ const Header = () => {
 
           {userInfo ? (
             <>
+            <button
+                onClick={() => handleNavigate('/movies')}
+                className={`nav-btn ${isActive('/movies') ? 'active' : ''}`}
+              >
+                Movies
+              </button>
               <button
                 onClick={() => handleNavigate('/admin/genres')}
                 className={`nav-btn ${isActive('/admin/genres') ? 'active' : ''}`}
