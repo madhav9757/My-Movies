@@ -1,0 +1,70 @@
+.movie-details-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  background-color: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.movie-details-container img {
+  width: 300px;
+  height: auto;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+
+.movie-details-content {
+  flex: 1;
+}
+
+.movie-details-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.movie-details-content p {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  color: #374151;
+}
+.movie-details-content .rating {
+  font-weight: bold;
+  color: #2563eb;
+}
+.movie-detail-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.edit-btn:hover {
+  background-color: #bfdbfe;
+}
+
+.delete-btn {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-btn:hover {
+  background-color: #fecaca;
+}

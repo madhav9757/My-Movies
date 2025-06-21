@@ -1,0 +1,143 @@
+.genre-movies-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.genre-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.genre-header h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.genre-header p {
+  font-size: 1.1rem;
+  color: #555;
+  font-style: italic;
+  max-width: 700px;
+  margin: auto;
+}
+
+.search-sort-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.search-sort-bar input,
+.search-sort-bar select {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  min-width: 200px;
+}
+
+.search-sort-bar input:focus,
+.search-sort-bar select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  outline: none;
+}
+
+.search-sort-bar select {
+  cursor: pointer;
+}
+
+/* Center content if no results */
+.no-movies {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #888;
+  margin-top: 2rem;
+}
+
+.movie-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.movie-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.movie-details {
+  padding: 1rem;
+}
+
+.movie-details h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.movie-meta {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.movie-description {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 0.75rem 0;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  background: #facc15;
+  color: #000;
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.movie-details a {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.movie-details a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .search-sort-bar {
+    flex-direction: column;
+  }
+}

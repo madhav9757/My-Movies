@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
-import { useGetMoviesQuery, useDeleteMovieMutation } from '../../redux/api/movies.js';
-import { Link } from 'react-router-dom';
+import { useGetMoviesQuery } from '../../redux/api/movies.js';
+import { Link, useNavigate } from 'react-router-dom';
 import './movies.css';
 
 const Movies = () => {
-  const { data: movies = [], isLoading, error, refetch } = useGetMoviesQuery();
-  const [deleteMovie] = useDeleteMovieMutation();
+  const { data: movies = [], isLoading, error } = useGetMoviesQuery();
   const [searchTerm, setSearchTerm] = useState('');
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this movie?')) {
-      await deleteMovie(id);
-      refetch();
-    }
-  };
+  const navigate = useNavigate();
 
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -44,8 +37,14 @@ const Movies = () => {
         <div className="movie-grid">
           {filteredMovies.length > 0 ? (
             filteredMovies.map((movie) => (
-              <div className="movie-card" key={movie._id}>
+              <div
+                className="movie-card"
+                key={movie._id}
+                onClick={() => navigate(`/movies/${movie._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img
+                  className="movie-poster"
                   src={
                     movie.image?.startsWith('https') || movie.image?.startsWith('upload')
                       ? movie.image
@@ -55,16 +54,14 @@ const Movies = () => {
                   alt={movie.title}
                 />
 
-                <div className="movie-info">
-                  <h3>{movie.title}</h3>
-                  <p>{movie.rating ? `⭐ ${movie.rating}` : 'No rating yet'}</p>
-                  <div className="movie-actions">
-                    <Link to={`/movies/edit/${movie._id}`} className="edit-btn">
-                      ✏ Edit
-                    </Link>
-                    <button onClick={() => handleDelete(movie._id)} className="delete-btn">
-                      🗑 Delete
-                    </button>
+                <div className="movie-details">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <span className="genre-badge">
+                    {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}
+                  </span>
+                  <div className="rating">
+                    <span>⭐</span>
+                    <span>{movie.rating || 'N/A'}</span>
                   </div>
                 </div>
               </div>
