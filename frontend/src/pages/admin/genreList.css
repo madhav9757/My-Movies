@@ -11,6 +11,30 @@
   margin-bottom: 1.5rem;
 }
 
+.genre-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.add-genre-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-genre-btn:hover {
+  background-color: #1e40af;
+}
+
 .genre-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

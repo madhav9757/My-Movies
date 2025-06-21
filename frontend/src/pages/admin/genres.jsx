@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   useGetGenresQuery,
   useDeleteGenreMutation,
@@ -52,10 +52,21 @@ const GenreList = () => {
     }
   };
 
+  useEffect(() => {
+    if (error) {
+      console.error('Error fetching genres:', error);
+    }
+    refetch();
+  }, [error]);
+
   return (
     <div className="genre-list-grid-container">
-      <h2>🎬 Genres</h2>
-
+      <div className="genre-list-header">
+        <h2>🎬 Genres</h2>
+        <button className="add-genre-btn" onClick={() => navigate('/admin/genres/new')}>
+          ➕ Add Genre
+        </button>
+      </div>
       {isLoading ? (
         <p>Loading...</p>
       ) : error ? (
