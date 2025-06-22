@@ -38,16 +38,25 @@ const Profile = () => {
               />
             )}
             <div className="profile-details">
-              <p><strong>Name:</strong> {userInfo.name}</p>
-              <p><strong>Email:</strong> {userInfo.email}</p>
+              <p>
+                <span className="icon">👤</span>
+                <strong>Name:</strong> <span>{userInfo.name}</span>
+              </p>
+              <p>
+                <span className="icon">📧</span>
+                <strong>Email:</strong> <span>{userInfo.email}</span>
+              </p>
               {userInfo.createdAt && (
-                <p><strong>Joined:</strong> {new Date(userInfo.createdAt).toLocaleDateString()}</p>
+                <p>
+                  <span className="icon">📅</span>
+                  <strong>Joined:</strong> <span>{new Date(userInfo.createdAt).toLocaleDateString()}</span>
+                </p>
               )}
             </div>
           </>
         )}
 
-        <button onClick={() => navigate('/profile/edit')}>✏️ Edit Profile</button>
+        <button className='profile-edit-btn' onClick={() => navigate('/profile/edit')}>✏️ Edit Profile</button>
       </div>
     </div>
   );
