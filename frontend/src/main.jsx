@@ -16,8 +16,8 @@ import AdminRoute from './pages/admin/adminRoute.jsx';
 import GenreList from './pages/admin/genres.jsx';
 import GenreCreate from './components/genreForm.jsx';
 import Movies from './pages/Movies/movies.jsx';
-import AddMovie from './components/addmovie.jsx';
-import EditMovie from './components/editMovie.jsx';
+import AddMovie from './components/movie/addMovie.jsx';
+import EditMovie from './components/movie/editMovie.jsx';
 import MovieDetails from './pages/Movies/MovieDetails.jsx';
 import GenreMovies from './pages/Movies/genreMovie.jsx';
 

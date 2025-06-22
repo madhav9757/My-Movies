@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useGetMovieByIdQuery, useUpdateMovieMutation } from '../redux/api/movies.js';
-import { useGetGenresQuery } from '../redux/api/genre.js';
+import { useGetMovieByIdQuery, useUpdateMovieMutation } from '../../redux/api/movies.js';
+import { useGetGenresQuery } from '../../redux/api/genre.js';
 import './editMovie.css';
 
 const EditMovie = () => {

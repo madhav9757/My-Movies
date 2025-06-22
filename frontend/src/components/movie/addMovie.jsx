@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react';
 import {
   useCreateMovieMutation,
   useUploadMovieImageMutation,
-} from '../redux/api/movies.js';
-import { useGetGenresQuery } from '../redux/api/genre';
+} from '../../redux/api/movies.js';
+import { useGetGenresQuery } from '../../redux/api/genre.js';
 import { useNavigate } from 'react-router-dom';
 import './addMovie.css';
 

@@ -57,6 +57,15 @@ export const movieApiSlice = apiSlice.injectEndpoints({
         // ⚠️ Let the browser set `Content-Type` for FormData
       }),
     }),
+
+    submitReview: builder.mutation({
+      query: ({ id, reviewData }) => ({
+        url: `${MOVIE_URL}/${id}/reviews`,
+        method: 'POST',
+        body: reviewData,
+      }),
+      invalidatesTags: ['Movie'],
+    }),
   }),
 });
 
@@ -67,5 +76,6 @@ export const {
   useCreateMovieMutation,
   useUpdateMovieMutation,
   useDeleteMovieMutation,
+  useSubmitReviewMutation, 
   useUploadMovieImageMutation
 } = movieApiSlice;
