@@ -28,6 +28,7 @@ const MovieDetails = () => {
 
   const userReview = movie.reviews.find((r) => r.user === user?._id);
   const otherReviews = movie.reviews.filter((r) => r.user !== user?._id);
+  console.log('User Review:', userReview);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this movie?')) {
@@ -50,6 +51,7 @@ const MovieDetails = () => {
         reviewData: {
           user: user._id,
           name: user.name || 'Anonymous',
+          image: user.image,
           rating: Number(rating),
           comment,
         },
@@ -106,7 +108,14 @@ const MovieDetails = () => {
         {userReview ? (
           <div className="highlighted-review">
             <div className="review-content">
-              <div className="user">👤 <strong>{userReview.name}</strong></div>
+              <div className="review-user">
+                {user.image ? (
+                  <img src={user.image} alt="avatar" className="avatar" />
+                ) : (
+                  <span className="user-icon">👤</span>
+                )}
+                <strong className="user-name">{user.name}</strong>
+              </div>
               <span>|</span>
               <span>⭐ {userReview.rating}</span>
               <span>{userReview.comment}</span>
@@ -146,7 +155,14 @@ const MovieDetails = () => {
           otherReviews.map((review) => (
             <div key={review._id} className="review-card">
               <div className="review-content">
-                <div className="user">👤 <strong>{review.name}</strong></div>
+                <div className="review-user">
+                  {review.image ? (
+                    <img src={review.image} alt="avatar" className="avatar" />
+                  ) : (
+                    <span className="user-icon">👤</span>
+                  )}
+                  <strong className="user-name">{review.name}</strong>
+                </div>
                 <span>|</span>
                 <span>⭐ {review.rating}</span>
                 <span>{review.comment}</span>

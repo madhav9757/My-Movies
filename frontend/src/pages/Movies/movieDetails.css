@@ -89,6 +89,25 @@
   font-weight: 500;
 }
 
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #121f31;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 .review-card .review-content .user {
   display: flex;
   align-items: center;
