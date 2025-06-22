@@ -201,3 +201,18 @@
   color: #6b7280;
   white-space: nowrap;
 }
+
+.delete-review-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.delete-review-btn:hover {
+  background: #dc2626;
+}

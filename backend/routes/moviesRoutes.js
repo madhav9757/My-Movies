@@ -5,7 +5,8 @@ import {
   createMovie,
   updateMovie,
   deleteMovie,
-  movieReviews
+  movieReviews,
+  deleteReview
 } from '../controllers/moviesController.js';
 
 import { protect, admin } from '../middlewares/authMiddleware.js';
@@ -18,7 +19,8 @@ router.get('/', getMovies);
 router.get('/:id', getMovieById);
 
 // Restricted (requires authentication)
-router.post('/:id/reviews', protect, checkId, movieReviews);  
+router.post('/:id/reviews', protect, checkId, movieReviews);
+router.delete('/:id/reviews/:reviewId', protect, checkId, deleteReview);
 
 // Protected (admin only)
 router.post('/', protect, admin, createMovie);

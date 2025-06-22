@@ -66,6 +66,13 @@ export const movieApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Movie'],
     }),
+
+    deleteReview: builder.mutation({
+      query: ({ id, reviewId }) => ({
+        url: `/movies/${id}/reviews/${reviewId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -76,6 +83,7 @@ export const {
   useCreateMovieMutation,
   useUpdateMovieMutation,
   useDeleteMovieMutation,
-  useSubmitReviewMutation, 
-  useUploadMovieImageMutation
+  useSubmitReviewMutation,
+  useUploadMovieImageMutation,
+  useDeleteReviewMutation,
 } = movieApiSlice;

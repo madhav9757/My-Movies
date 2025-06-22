@@ -106,16 +106,51 @@ const movieReviews = asyncHandler(async (req, res) => {
     };
 
     movie.reviews.push(review);
-    movie.numReviews = movie.reviews.length;
     movie.averageRating =
       movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
 
     await movie.save();
     res.status(201).json({ message: 'Review added' });
   } else {
+    throw new Error('Movie not found');
+  }
+});
+
+// DELETE /api/movies/:movieId/reviews/:reviewId
+const deleteReview = asyncHandler(async (req, res) => {
+  const { movieId, reviewId } = req.params;
+  const movie = await Movie.findById(req.params.id);
+
+  if (!movie) {
     res.status(404);
     throw new Error('Movie not found');
   }
+
+  const review = movie.reviews.id(reviewId);
+
+  if (!review) {
+    res.status(404);
+    throw new Error('Review not found');
+  }
+
+  // Optional: only allow user to delete their own review
+  if (review.user.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('Not authorized to delete this review');
+  }
+
+  // ✅ Remove review
+  review.deleteOne();
+
+  // ✅ Recalculate ratings
+  movie.numReviews = movie.reviews.length;
+  movie.averageRating =
+    movie.reviews.length > 0
+      ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
+      : 0;
+
+  await movie.save();
+  res.status(200).json({ message: 'Review deleted' });
 });
 
 export {
@@ -124,5 +159,6 @@ export {
   createMovie,
   updateMovie,
   deleteMovie,
-  movieReviews
+  movieReviews,
+  deleteReview
 };

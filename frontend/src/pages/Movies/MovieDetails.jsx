@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetMoviesQuery, useDeleteMovieMutation, useSubmitReviewMutation } from '../../redux/api/movies.js';
+import { useGetMoviesQuery, useDeleteMovieMutation, useSubmitReviewMutation, useDeleteReviewMutation } from '../../redux/api/movies.js';
 import { useSelector } from 'react-redux';
 import { FaPaperPlane } from 'react-icons/fa';
 import './movieDetails.css';
@@ -18,6 +18,7 @@ const MovieDetails = () => {
 
   const [deleteMovie] = useDeleteMovieMutation();
   const [submitReview] = useSubmitReviewMutation();
+  const [deleteReview] = useDeleteReviewMutation();
 
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
@@ -64,6 +65,19 @@ const MovieDetails = () => {
     } catch (error) {
       console.error(error);
       alert('Failed to submit review.');
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
+
+    try {
+      await deleteReview({ movieId: movie._id, reviewId });
+      alert('Review deleted!');
+      refetch(); // to refresh the reviews
+    } catch (err) {
+      console.error('Failed to delete review:', err);
+      alert('Error deleting review.');
     }
   };
 
@@ -123,6 +137,12 @@ const MovieDetails = () => {
             <span className="review-date">
               {new Date(userReview.createdAt).toLocaleDateString()}
             </span>
+            <button
+              className="delete-review-btn"
+              onClick={() => handleDeleteReview(userReview._id)}
+            >
+              🗑 Delete Review
+            </button>
           </div>
         ) : (
           // Inline review input
