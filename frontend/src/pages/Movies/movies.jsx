@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetMoviesQuery } from '../../redux/api/movies.js';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDebounce } from 'use-debounce';
+import MovieCard from '../../components/movie/movieCard.jsx';
 import './movies.css';
 
 const Movies = () => {
   const { data: movies = [], isLoading, error } = useGetMoviesQuery();
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch] = useDebounce(searchTerm, 300);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = 'All Movies | MovieApp';
+  }, []);
+
   const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    movie.title.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   return (
@@ -32,45 +39,22 @@ const Movies = () => {
       {isLoading ? (
         <p>Loading movies...</p>
       ) : error ? (
-        <p>Error loading movies.</p>
-      ) : (
+        <div className="error-message">
+          <p>⚠️ Error loading movies.</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      ) : filteredMovies.length > 0 ? (
         <div className="movie-grid">
-          {filteredMovies.length > 0 ? (
-            filteredMovies.map((movie) => (
-              <div
-                className="movie-card"
-                key={movie._id}
-                onClick={() => navigate(`/movies/${movie._id}`)}
-                style={{ cursor: 'pointer' }}
-              >
-                <img
-                  className="movie-poster"
-                  src={
-                    movie.image?.startsWith('https') || movie.image?.startsWith('upload')
-                      ? movie.image
-                      : `http://localhost:3000${movie.image}`
-                  }
-                  onError={(e) => (e.target.src = '/placeholder.jpg')}
-                  alt={movie.title}
-                />
-
-                <div className="movie-details">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <div className='meta-info'>
-                    <span className="genre-badge">
-                      {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}
-                    </span>
-                    <div className="rating">
-                      <span>⭐</span>
-                      <span>{movie.rating || 'N/A'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="no-movies">🎞️ No movies found.</p>
-          )}
+          {filteredMovies.map((movie) => (
+            <MovieCard key={movie._id} movie={movie} />
+          ))}
+        </div>
+      ) : (
+        <div className="no-movies">
+          <p>🎞️ No movies found.</p>
+          <Link to="/movies/add" className="add-movie-btn">
+            + Add Your First Movie
+          </Link>
         </div>
       )}
     </div>

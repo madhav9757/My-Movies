@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useGetMoviesQuery } from '../../redux/api/movies';
 import { useGetGenresQuery } from '../../redux/api/genre';
+import MovieCard from '../../components/movie/movieCard';
 import './genreMovie.css';
 
 const GenreMovies = () => {
@@ -76,28 +77,7 @@ const GenreMovies = () => {
       {filteredMovies.length > 0 ? (
         <div className="movie-grid">
           {filteredMovies.map((movie) => (
-            <div className="movie-card" key={movie._id}>
-              <img
-                className="movie-poster"
-                src={
-                  movie.image?.startsWith('https') || movie.image?.startsWith('upload')
-                    ? movie.image
-                    : `http://localhost:3000${movie.image}`
-                }
-                onError={(e) => (e.target.src = '/placeholder.jpg')}
-                alt={movie.title}
-              />
-
-              <div className="movie-info">
-                <h3>{movie.title}</h3>
-                <p><strong>Director:</strong> {movie.director}</p>
-                <p><strong>Release:</strong> {new Date(movie.releaseDate).toLocaleDateString()}</p>
-                <p><strong>Description:</strong> {movie.description}</p>
-                <div className="rating">{'⭐'.repeat(Math.round(movie.rating || 0))}</div>
-              </div>
-
-              <Link to={`/movies/${movie._id}`} className="details-btn">🔍 View Details</Link>
-            </div>
+            <MovieCard key={movie._id} movie={movie} /> 
           ))}
         </div>
       ) : (
