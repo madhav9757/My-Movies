@@ -49,40 +49,6 @@ export const login = createAsyncThunk(
   }
 );
 
-export const update = createAsyncThunk(
-  'auth/update',
-  async (userData, thunkAPI) => {
-    try {
-      // Get token from state
-      const state = thunkAPI.getState();
-      const token = state.auth.user?.token || JSON.parse(localStorage.getItem('userInfo'))?.token;
-
-      const response = await fetch('/api/users/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message || 'Update failed');
-      }
-
-      // Update localStorage and return updated user
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      return data;
-    } catch (error) {
-      const message =
-        error?.response?.data?.message || error.message || 'Update error';
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 // ✅ REGISTER
 export const register = createAsyncThunk(
   'auth/register',
@@ -161,12 +127,6 @@ const authSlice = createSlice({
         state.message = action.payload;
         state.userInfo = null;
       })
-      .addCase(update.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-
       // REGISTER
       .addCase(register.pending, (state) => {
         state.isLoading = true;

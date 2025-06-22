@@ -17,6 +17,8 @@ const authUser = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            image: user.image,
+            age: user.age,
             isAdmin: user.isAdmin,
             createdAt: user.createdAt, 
             updatedAt: user.updatedAt, 
@@ -44,6 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password,
+        image: req.body.image || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg',
         isAdmin
     });
 
@@ -56,6 +59,7 @@ const registerUser = asyncHandler(async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin,
             age: user.age,
+            image: user.image,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         });
@@ -87,6 +91,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             email: req.user.email,
             isAdmin: req.user.isAdmin,
             age: req.user.age,
+            image: req.user.image,
             createdAt: req.user.createdAt,
             updatedAt: req.user.updatedAt,
         });
@@ -100,33 +105,41 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id); // Fetch the user to update
+  const user = await User.findById(req.user._id); // Fetch the user to update
 
-    if (user) {
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-        user.age = req.body.age !== undefined ? req.body.age : user.age; // Allow 0 for age
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.age = req.body.age !== undefined ? req.body.age : user.age;
 
-        if (req.body.password) {
-            user.password = req.body.password; // Mongoose pre-save hook will hash this
-        }
-
-        const updatedUser = await user.save(); // Save the updated user document
-
-        res.status(200).json({
-            _id: updatedUser._id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            isAdmin: updatedUser.isAdmin,
-            age: updatedUser.age,
-            createdAt: updatedUser.createdAt,
-            updatedAt: updatedUser.updatedAt,
-        });
-    } else {
-        res.status(404);
-        throw new Error('User not found');
+    // ✅ Handle optional profile image update
+    if (req.body.image) {
+      user.image = req.body.image;
     }
+
+    // ✅ Handle password update (will be hashed via pre-save)
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      age: updatedUser.age,
+      image: updatedUser.image || null,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
 });
+
 
 // @desc    Get all users (Admin only)
 // @route   GET /api/users
@@ -149,6 +162,7 @@ const getUserById = asyncHandler(async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin,
             age: user.age,
+            image: user.image,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         });
@@ -199,6 +213,7 @@ const updateUser = asyncHandler(async (req, res) => {
             email: updatedUser.email,
             isAdmin: updatedUser.isAdmin,
             age: updatedUser.age,
+            image: updatedUser.image,
             createdAt: updatedUser.createdAt,
             updatedAt: updatedUser.updatedAt,
         });

@@ -43,3 +43,12 @@
 .profile-edit-btn:hover {
   background-color: #4338ca;
 }
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 1rem auto;
+  display: block;
+  border: 3px solid #4f46e5;
+}

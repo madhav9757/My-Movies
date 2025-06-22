@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    image: { 
+        type: String,
+        default: 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg', 
+    },
     isAdmin: {
         type: Boolean,
         required: true,
@@ -29,12 +33,12 @@ const userSchema = new mongoose.Schema({
 
 );
 
-userSchema.pre('save', async function(next) {
-    if (this.isModified('password')) { 
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
         const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt); 
+        this.password = await bcrypt.hash(this.password, salt);
     }
-    next(); 
+    next();
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

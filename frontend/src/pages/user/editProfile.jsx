@@ -1,90 +1,153 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { update, reset } from '../../redux/features/auth/authSlice';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useUpdateProfileMutation, useGetProfileQuery } from '../../redux/api/profile';
+import { setCredentials } from '../../redux/features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 import './editProfile.css';
-import { useNavigate } from 'react-router';
-import { Navigate } from 'react-router';
 
 const EditProfile = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector((state) => state.auth);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { userInfo, isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+  const { data: profile, refetch } = useGetProfileQuery();
+  const [updateProfile, { isLoading, isSuccess, isError, error }] = useUpdateProfileMutation();
 
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
+  const fileInputRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    image: '',
+  });
+
+  const [preview, setPreview] = useState('');
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        name: profile.name || '',
+        email: profile.email || '',
         password: '',
-    });
+        image: profile.image || '',
+      });
+      setPreview(profile.image || '');
+    }
+  }, [profile]);
 
-    useEffect(() => {
-        if (userInfo) {
-            setFormData({
-                name: userInfo.name || '',
-                email: userInfo.email || '',
-                password: '',
-            });
-            navigate('/profile')
-        }
-        return () => dispatch(reset());
-    }, [userInfo, dispatch, navigate]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleImageURLChange = (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ ...prev, image: value }));
+    setPreview(value);
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const updatedData = {
-            name: formData.name,
-            email: formData.email,
-        };
-        if (formData.password.trim()) {
-            updatedData.password = formData.password;
-        }
-        dispatch(update(updatedData));
-    };
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
-    return (
-        <div className="edit-profile-container">
-            <form className="edit-profile-form" onSubmit={handleSubmit}>
-                <h2>Edit Profile</h2>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                />
+    try {
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('email', formData.email);
+      if (formData.password) data.append('password', formData.password);
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+      if (formData.image && typeof formData.image !== 'string') {
+        data.append('image', formData.image); // file
+      } else if (typeof formData.image === 'string') {
+        data.append('image', formData.image); // URL
+      }
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="New Password (optional)"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+      const updated = await updateProfile(data).unwrap();
+      dispatch(setCredentials(updated));
+      localStorage.setItem('userInfo', JSON.stringify(updated));
+      navigate('/profile');
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+  };
 
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Updating...' : 'Save Changes'}
-                </button>
+  return (
+    <div className="edit-profile-container">
+      <form className="edit-profile-form" onSubmit={handleSubmit}>
+        <h2>Edit Profile</h2>
 
-                {isSuccess && <p className="success-msg">✅ Profile updated successfully!</p>}
-                {isError && <p className="error-msg">❌ {message}</p>}
-            </form>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="New Password (optional)"
+          value={formData.password}
+          onChange={handleChange}
+        />
+
+        <div className="image-input-wrapper">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current.click()}
+            className="file-icon-button"
+          >
+            📁
+          </button>
+          <input
+            type="text"
+            placeholder="Paste image URL or choose file"
+            value={typeof formData.image === 'string' ? formData.image : ''}
+            onChange={handleImageURLChange}
+            className="image-url-input"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleImageUpload}
+          />
         </div>
-    );
+
+        {preview && <img src={preview} alt="Preview" className="preview-image" />}
+
+        <button type="submit" className="save-changes-button" disabled={isLoading}>
+          {isLoading ? 'Updating...' : 'Save Changes'}
+        </button>
+
+        {isSuccess && <p className="success-msg">✅ Profile updated successfully!</p>}
+        {isError && <p className="error-msg">❌ {error?.data?.message || 'Update failed'}</p>}
+      </form>
+    </div>
+  );
 };
 
 export default EditProfile;
