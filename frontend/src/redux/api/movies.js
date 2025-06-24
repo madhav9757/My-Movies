@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import { MOVIE_URL, UPLOAD_URL } from "../constants";
+import { MOVIE_URL, UPLOAD_URL, BASE_URL } from "../constants";
 
 export const movieApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -73,6 +73,19 @@ export const movieApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+
+    uploadImage: builder.mutation({
+      query: (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        return {
+          url: `${UPLOAD_URL}`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+    }),
   }),
 });
 
@@ -86,4 +99,5 @@ export const {
   useSubmitReviewMutation,
   useUploadMovieImageMutation,
   useDeleteReviewMutation,
+  useUploadImageMutation,
 } = movieApiSlice;

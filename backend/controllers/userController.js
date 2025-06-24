@@ -104,42 +104,50 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id); // Fetch the user to update
+const updateUserProfile = async (req, res) => {
+    
+    const user = await User.findById(req.user._id);
 
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.age = req.body.age !== undefined ? req.body.age : user.age;
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
 
-    // ✅ Handle optional profile image update
-    if (req.body.image) {
-      user.image = req.body.image;
+        // Handle password change if provided
+        if (req.body.password) {
+            user.password = req.body.password; 
+        }
+
+        // --- IMAGE HANDLING LOGIC ---
+        if (req.file) {
+            console.log('Controller: New file uploaded. Filename:', req.file.filename);
+            user.image = `/uploads/${req.file.filename}`; 
+        } else if (typeof req.body.image === 'string' && req.body.image !== '') {
+            console.log('Controller: Image is a URL:', req.body.image);
+            user.image = req.body.image;
+        } else if (typeof req.body.image === 'string' && req.body.image === '') {
+            console.log('Controller: Image explicitly cleared.');
+            user.image = '';
+        }
+        
+        try {
+            const updatedUser = await user.save();
+
+            res.status(200).json({
+                _id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                image: updatedUser.image, 
+                isAdmin: updatedUser.isAdmin,
+                // Do NOT send password back
+            });
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+            res.status(400).json({ message: 'Error updating profile', error: error.message });
+        }
+    } else {
+        res.status(404).json({ message: 'User not found' });
     }
-
-    // ✅ Handle password update (will be hashed via pre-save)
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-      age: updatedUser.age,
-      image: updatedUser.image || null,
-      createdAt: updatedUser.createdAt,
-      updatedAt: updatedUser.updatedAt,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
+};
 
 // @desc    Get all users (Admin only)
 // @route   GET /api/users

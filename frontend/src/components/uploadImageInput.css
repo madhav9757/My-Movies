@@ -1,0 +1,64 @@
+.image-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.image-input-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-url-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  min-width: 0;
+  transition: border-color 0.2s;
+}
+
+.image-url-input:disabled {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+}
+
+.file-btn,
+.clear-image-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.45rem 0.65rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-image-button {
+  background-color: #ef4444;
+}
+
+.file-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.clear-image-button:hover {
+  background-color: #dc2626;
+}
+
+.image-preview {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  object-fit: cover;
+  border: 2px solid #d1d5db;
+  align-self: center;
+}
