@@ -18,8 +18,6 @@ const EditMovie = () => {
 
     const [imageValue, setImageValue] = useState('');
     const [preview, setPreview] = useState('');
-    const [imageSource, setImageSource] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
 
     const API = import.meta.env.VITE_API_URL;
 
@@ -57,7 +55,7 @@ const EditMovie = () => {
 
         try {
             const res = await uploadImage(formData).unwrap();
-            const imageUrl = res.image.startsWith('http') ? res.image : `http://localhost:3000${res.image}`;
+            const imageUrl = res.image.startsWith('http') ? res.image : `${API}${res.image}`;
 
             setImageValue(res.image);
             setValue('image', res.image); // for react-hook-form

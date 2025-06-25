@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUpdateProfileMutation, useGetProfileQuery } from '../../redux/api/profile';
-import { useUploadImageMutation } from '../../redux/api/movies';
+import { useUploadMovieImageMutation } from '../../redux/api/movies.js';
 import { setCredentials } from '../../redux/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import './editProfile.css';
 import ImageInput from '../../components/uploadImageInput.jsx';
+import { set } from 'mongoose';
 
 const EditProfile = () => {
+
+  const API = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
-  const [uploadImage] = useUploadImageMutation();
 
+  const [uploadImage] = useUploadMovieImageMutation();
   const { data: profile } = useGetProfileQuery();
   const [updateProfile, { isLoading, isSuccess, isError, error }] = useUpdateProfileMutation();
 
@@ -23,7 +27,7 @@ const EditProfile = () => {
     password: '',
     image: '',
   });
-
+  const [imageSource, setImageSource] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
@@ -34,39 +38,60 @@ const EditProfile = () => {
         password: '',
         image: profile.image || '',
       });
-      setPreviewUrl(profile.image || '');
+      const fullImageUrl = profile.image?.startsWith('http')
+        ? profile.image
+        : `${API}${profile.image}`;
+      setPreviewUrl(fullImageUrl);
     }
-  }, [profile]);
+  }, [profile, setFormData]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageInput = async (input) => {
-    if (input instanceof File) {
-      const formData = new FormData();
-      formData.append('image', input);
+  const handleImageInput = async (file) => {
+    if (file instanceof File) {
+      const imageData = new FormData();
+      imageData.append('image', file);
       try {
-        const { image } = await uploadImage(formData).unwrap();
-        setFormData((prev) => ({ ...prev, image }));
+        const { image } = await uploadImage(imageData).unwrap();
+        const fullImageUrl = image.startsWith('http') ? image : `${API}${image}`;
+        setFormData((prev) => ({ ...prev, image: fullImageUrl }));
+        setPreviewUrl(fullImageUrl);
+        setImageSource('upload');
       } catch (err) {
-        console.error("Image upload failed:", err);
-        alert("Image upload failed. Please try again.");
+        console.error('Image upload failed:', err);
+        alert('Image upload failed. Please try again.');
       }
     } else {
-      setFormData((prev) => ({ ...prev, image: input }));
+      // It's a URL
+      setFormData((prev) => ({ ...prev, image: value }));
+      setPreviewUrl(file);
+      setImageSource('url');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dataToSubmit = new FormData();
-      dataToSubmit.append('name', formData.name);
-      dataToSubmit.append('email', formData.email);
-      if (formData.password) dataToSubmit.append('password', formData.password);
-      dataToSubmit.append('image', formData.image);
+      const dataToSubmit = {
+        name: formData.name,
+        email: formData.email,
+        image: formData.image,
+      };
+
+      if (formData.password) {
+        dataToSubmit.password = formData.password;
+      }
 
       const updated = await updateProfile(dataToSubmit).unwrap();
       dispatch(setCredentials(updated));
@@ -74,7 +99,7 @@ const EditProfile = () => {
       navigate('/profile');
     } catch (err) {
       console.error('Profile update failed:', err);
-      alert('Profile update failed: ' + (err.data?.message || 'Unknown error'));
+      alert('Profile update failed: ' + (err?.data?.message || 'Unknown error'));
     }
   };
 
