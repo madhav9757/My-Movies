@@ -9,11 +9,19 @@ import genreRoutes from "./routes/genreRoutes.js";
 import moviesRoutes from "./routes/moviesRoutes.js";
 import uploadRoutes from './routes/uploadRoutes.js';
 import mongoose from "mongoose";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Use env variable
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
