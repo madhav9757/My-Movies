@@ -8,23 +8,23 @@ import userRoutes from "./routes/userRoutes.js";
 import genreRoutes from "./routes/genreRoutes.js";
 import moviesRoutes from "./routes/moviesRoutes.js";
 import uploadRoutes from './routes/uploadRoutes.js';
-import mongoose from "mongoose";
-import cors from "cors";
+import cors from "cors"; // No need for mongoose import here
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // PORT will be ignored by Vercel for serverless functions
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Use env variable
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
 };
 app.use(cors(corsOptions));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url); // Not directly needed unless you are resolving paths relative to this file
+// const __dirname = path.dirname(__filename); // Not directly needed
 
 // --- Middleware ---
 app.use(express.json());
@@ -41,48 +41,28 @@ app.use('/api/upload', uploadRoutes);
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
+
 // --- Static File Serving ---
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// !!! IMPORTANT: This will NOT work on Vercel for user uploads.
+// User-uploaded files need to be stored in a persistent cloud storage (S3, Cloudinary, etc.).
+// For now, comment it out to get the basic API working.
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Error Handling Middleware ---
 app.use((err, req, res, next) => {
     console.error(err.stack);
-
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     res.status(statusCode);
-
     res.json({
         message: err.message,
         stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
 });
 
-connectToDatabase()
-    .then(() => {
-        mongoose.connection.on('connected', () => {
-            console.log('Mongoose default connection open');
-        });
+// Connect to database only once when the function initializes (cold start)
+// You might want to move this connection logic into a separate file/function
+// that is called once, or ensure connectToDatabase() handles existing connections.
+connectToDatabase(); // Call the function to connect
 
-        mongoose.connection.on('error', (err) => {
-            console.error('Mongoose default connection error:', err);
-        });
-
-        mongoose.connection.on('disconnected', () => {
-            console.log('Mongoose default connection disconnected');
-        });
-
-        app.listen(PORT, () => {
-            console.log(`Server running in ${process.env.NODE_ENV} mode on port http://localhost:${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.error("Failed to connect to MongoDB and start server:", err);
-        process.exit(1);
-    });
-
-process.on('SIGINT', async () => {
-    console.log('SIGINT received. Closing Mongoose connection...');
-    await mongoose.connection.close();
-    console.log('Mongoose default connection disconnected through app termination');
-    process.exit(0);
-});
+// EXPORT THE APP for Vercel
+export default app; // For ES Modules
