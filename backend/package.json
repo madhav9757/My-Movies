@@ -17,6 +17,7 @@
     "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "cookies-parser": "^1.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "gitignore": "^0.7.0",
