@@ -5,16 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "backend": "nodemon index.js"
+    "backend": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "types": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
-    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "cookies-parser": "^1.2.0",
     "cors": "^2.8.5",
@@ -24,7 +22,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",
     "multer": "^2.0.1",
-    "nodemon": "^3.1.10",
     "react-hook-form": "^7.58.1",
     "slugify": "^1.6.6",
     "url": "^0.11.4"
