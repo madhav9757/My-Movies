@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 // --- Static File Serving ---
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Error Handling Middleware ---
 app.use((err, req, res, next) => {
