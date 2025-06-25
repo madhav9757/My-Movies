@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import './editProfile.css';
 import ImageInput from '../../components/uploadImageInput.jsx';
-import { set } from 'mongoose';
 
 const EditProfile = () => {
 
