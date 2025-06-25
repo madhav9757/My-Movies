@@ -19,6 +19,7 @@
     "express": "^5.1.0",
     "gitignore": "^0.7.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.16.0",
     "multer": "^2.0.1",
     "slugify": "^1.6.6",
