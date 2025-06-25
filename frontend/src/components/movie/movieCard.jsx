@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './movieCard.css';
 
 const MovieCard = ({ movie }) => {
+
+    const API = import.meta.env.VITE_API_URL;
+
     const navigate = useNavigate();
 
     return (
@@ -17,7 +20,7 @@ const MovieCard = ({ movie }) => {
                 src={
                     movie.image?.startsWith('https') || movie.image?.startsWith('upload')
                         ? movie.image
-                        : `http://localhost:3000${movie.image}`
+                        : `${API}${movie.image}`
                 }
                 onError={(e) => (e.target.src = '/placeholder.jpg')}
                 alt={movie.title}

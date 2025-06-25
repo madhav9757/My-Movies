@@ -1,81 +1,118 @@
-.movie-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    width: 240px;
-}
+    .movie-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        text-decoration: none;
+        color: inherit;
+        display: inline-block;
+        background-color: #000;
 
-.movie-card:hover {
-    transform: translateY(-6px);
-}
+        padding: 0;
+        width: auto;
+        max-width: 500px;
+        margin: auto;
+    }
 
-.movie-poster {
-    width: 100%;
-    height: 360px;
-    object-fit: cover;
-    display: block;
-    transition: filter 0.3s;
-    border-radius: 1rem;
-}
+    .movie-card:hover {
+        transform: translateY(-8px) scale(1.025);
+        box-shadow: 0 0 18px 4px rgba(0, 153, 255, 0.4);
+        /* Glow effect */
+    }
 
-.movie-card:hover .movie-poster {
-    filter: brightness(65%);
-}
+    .movie-poster {
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+        display: block;
+        transition: filter 0.4s ease, transform 0.4s ease;
+        border-radius: 1rem;
+    }
 
-.movie-details {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 1rem 0.75rem;
-    color: #fff;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 60%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
+    .movie-card:hover .movie-poster {
+        filter: blur(3px);
+        /* Blur effect */
+        transform: scale(1.05);
+    }
 
-.movie-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0;
-    text-align: center;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-}
+    /* Optional overlay for better contrast */
+    .movie-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
 
-.meta-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.4rem;
-    flex-wrap: nowrap;
-}
+    .movie-card:hover::before {
+        opacity: 1;
+    }
 
-.genre-badge {
-    background-color: #dbeafe;
-    color: #2563eb;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    line-height: 1;
-}
+    .movie-details {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        z-index: 2;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
 
-.rating {
-    background-color: #fef08a;
-    color: #ca8a04;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
+    .movie-card:hover .movie-details {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .movie-title {
+        font-size: 1.05rem;
+        font-weight: bold;
+        margin: 0;
+        max-width: 80% ;
+        text-align: center;
+        line-height: 1.4;
+        word-break: break-word;
+        white-space: normal;
+        /* ✅ Allows wrapping */
+        text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    .meta-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: nowrap;
+    }
+
+    .genre-badge {
+        background-color: #dbeafe;
+        color: #2563eb;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        line-height: 1;
+    }
+
+    .rating {
+        background-color: #fef08a;
+        color: #ca8a04;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
