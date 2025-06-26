@@ -1,7 +1,4 @@
 const asyncHandler = (fn) => (req, res, next) => {
-    Promise.resolve(fn(req, res, next)).catch((error) => {
-        res.status(500).json({message: error.message})
-    });
+  Promise.resolve(fn(req, res, next)).catch(next); // Passes error to error middleware
 };
-
 export default asyncHandler;

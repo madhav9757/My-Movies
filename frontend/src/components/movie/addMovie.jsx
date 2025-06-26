@@ -3,11 +3,11 @@ import { FaFilm, FaStar, FaUser, FaCalendarAlt, FaEdit } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import {
   useCreateMovieMutation,
-  useUploadMovieImageMutation,
 } from '../../redux/api/movies.js';
 import { useGetGenresQuery } from '../../redux/api/genre.js';
 import { useNavigate } from 'react-router-dom';
 import ImageInput from '../uploadImageInput.jsx';
+import { uploadImage } from '../../redux/api/uploadImage.js';
 import './addMovie.css';
 
 const API = import.meta.env.VITE_API_URL;
@@ -27,7 +27,6 @@ const AddMovie = () => {
   const [preview, setPreview] = useState('');
   const navigate = useNavigate();
   const [createMovie] = useCreateMovieMutation();
-  const [uploadImage] = useUploadMovieImageMutation();
   const { data: genres = [] } = useGetGenresQuery();
 
   const handleChange = (e) => {
@@ -40,7 +39,7 @@ const AddMovie = () => {
       const formData = new FormData();
       formData.append('image', value);
       try {
-        const res = await uploadImage(formData).unwrap();
+        const res = await uploadImage(formData);
         const imageUrl = res.image.startsWith('http') ? res.image : `${API}${res.image}`;
         setForm((prev) => ({ ...prev, image: res.image }));
         setPreview(imageUrl);

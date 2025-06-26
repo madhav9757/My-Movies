@@ -1,5 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { MOVIE_URL, UPLOAD_URL, BASE_URL } from "../constants";
+import api from "./axiosInstance";
 
 export const movieApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -49,15 +50,6 @@ export const movieApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Movie'],
     }),
 
-    uploadMovieImage: builder.mutation({
-      query: (formData) => ({
-        url: `${UPLOAD_URL}`,
-        method: 'POST',
-        body: formData,
-        // ⚠️ Let the browser set `Content-Type` for FormData
-      }),
-    }),
-
     submitReview: builder.mutation({
       query: ({ id, reviewData }) => ({
         url: `${MOVIE_URL}/${id}/reviews`,
@@ -73,19 +65,6 @@ export const movieApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE',
       }),
     }),
-
-    uploadImage: builder.mutation({
-      query: (file) => {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        return {
-          url: `${UPLOAD_URL}`,
-          method: 'POST',
-          body: formData,
-        };
-      },
-    }),
   }),
 });
 
@@ -97,7 +76,5 @@ export const {
   useUpdateMovieMutation,
   useDeleteMovieMutation,
   useSubmitReviewMutation,
-  useUploadMovieImageMutation,
   useDeleteReviewMutation,
-  useUploadImageMutation,
 } = movieApiSlice;

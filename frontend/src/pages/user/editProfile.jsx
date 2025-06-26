@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUpdateProfileMutation, useGetProfileQuery } from '../../redux/api/profile';
-import { useUploadMovieImageMutation } from '../../redux/api/movies.js';
+import { uploadImage } from '../../redux/api/uploadImage.js';
 import { setCredentials } from '../../redux/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
@@ -16,7 +16,6 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [uploadImage] = useUploadMovieImageMutation();
   const { data: profile } = useGetProfileQuery();
   const [updateProfile, { isLoading, isSuccess, isError, error }] = useUpdateProfileMutation();
 
@@ -62,7 +61,7 @@ const EditProfile = () => {
       const imageData = new FormData();
       imageData.append('image', file);
       try {
-        const { image } = await uploadImage(imageData).unwrap();
+        const { image } = await uploadImage(imageData);
         const fullImageUrl = image.startsWith('http') ? image : `${API}${image}`;
         setFormData((prev) => ({ ...prev, image: fullImageUrl }));
         setPreviewUrl(fullImageUrl);

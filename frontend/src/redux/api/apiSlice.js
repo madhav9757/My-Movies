@@ -3,12 +3,12 @@ import { BASE_URL } from '../constants';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL, 
+  credentials: 'include', 
 });
 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery, 
   tagTypes: ['User', 'Product', 'Order'],
-  endpoints: (builder) => ({
-  }),
+  endpoints: (builder) => ({}),
 });

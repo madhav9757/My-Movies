@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../api/axiosInstance.js';
 
 // ✅ Robust localStorage parsing
 let userInfoFromStorage = null;
@@ -25,25 +26,12 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData, thunkAPI) => {
     try {
-      const response = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message || 'Login failed');
-      }
-
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      return data;
+      const response = await api.post('/api/users/login', userData);
+      localStorage.setItem('userInfo', JSON.stringify(response.data));
+      return response.data;
     } catch (error) {
       const message =
-        error?.response?.data?.message || error.message || 'Login error';
+        error.response?.data?.message || error.message || 'Login error';
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -54,25 +42,12 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData, thunkAPI) => {
     try {
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message || 'Registration failed');
-      }
-
-      localStorage.setItem('userInfo', JSON.stringify(data.user));
-      return data.user;
+      const response = await api.post('/api/users', userData);
+      localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      return response.data.user;
     } catch (error) {
       const message =
-        error?.response?.data?.message || error.message || 'Register error';
+        error.response?.data?.message || error.message || 'Register error';
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -82,7 +57,7 @@ export const register = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
     localStorage.removeItem('userInfo');
-    await fetch('/api/users/logout', { method: 'POST' });
+    await api.post('/api/users/logout');
     return;
   } catch (error) {
     const message =
@@ -96,7 +71,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Set user manually (optional for RTK Query)
+    // Manually update credentials
     setCredentials: (state, action) => {
       state.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(action.payload));
@@ -144,7 +119,6 @@ const authSlice = createSlice({
         state.message = action.payload;
         state.userInfo = null;
       })
-
       // LOGOUT
       .addCase(logout.fulfilled, (state) => {
         state.userInfo = null;

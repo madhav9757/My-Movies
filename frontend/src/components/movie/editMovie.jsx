@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useGetMovieByIdQuery, useUpdateMovieMutation, useUploadMovieImageMutation } from '../../redux/api/movies.js';
+import { useGetMovieByIdQuery, useUpdateMovieMutation } from '../../redux/api/movies.js';
 import { useGetGenresQuery } from '../../redux/api/genre.js';
+import { uploadImage } from '../../redux/api/uploadImage.js';
 import ImageInput from '../uploadImageInput.jsx';
 import './editMovie.css';
 
@@ -12,7 +13,6 @@ const EditMovie = () => {
     const { data: genres = [] } = useGetGenresQuery();
     const { data: movie, isLoading } = useGetMovieByIdQuery(id);
     const [updateMovie] = useUpdateMovieMutation();
-    const [uploadImage] = useUploadMovieImageMutation();
 
     const { register, handleSubmit, setValue } = useForm();
 
@@ -54,7 +54,7 @@ const EditMovie = () => {
         formData.append('image', file);
 
         try {
-            const res = await uploadImage(formData).unwrap();
+            const res = await uploadImage(formData);
             const imageUrl = res.image.startsWith('http') ? res.image : `${API}${res.image}`;
 
             setImageValue(res.image);
