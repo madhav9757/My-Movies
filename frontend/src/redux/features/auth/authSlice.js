@@ -27,7 +27,13 @@ export const login = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await api.post('/api/users/login', userData);
+
+      // ✅ Save token + user info
       localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+      // ✅ Use thunkAPI.dispatch instead of useDispatch()
+      thunkAPI.dispatch(setCredentials(response.data));
+
       return response.data;
     } catch (error) {
       const message =
@@ -44,6 +50,7 @@ export const register = createAsyncThunk(
     try {
       const response = await api.post('/api/users', userData);
       localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      thunkAPI.dispatch(setCredentials(response.data.user))
       return response.data.user;
     } catch (error) {
       const message =

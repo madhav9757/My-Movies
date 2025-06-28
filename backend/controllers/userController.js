@@ -22,6 +22,7 @@ const authUser = asyncHandler(async (req, res) => {
             isAdmin: user.isAdmin,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
+            token: generateToken(null, user._id, user.isAdmin)
         });
     } else {
         res.status(401);
@@ -62,6 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
             image: user.image,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
+            token: generateToken(null, user._id, user.isAdmin)
         });
     } else {
         res.status(400);
@@ -95,6 +97,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             cloudinaryId: req.user.cloudinaryId,
             createdAt: req.user.createdAt,
             updatedAt: req.user.updatedAt,
+            token: generateToken(req.User._id), 
         });
     } else {
         res.status(404);
