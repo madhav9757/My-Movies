@@ -5,6 +5,7 @@ import User from '../models/user.js';
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
+  console.log('Auth header in PROTECT:', req.headers.authorization);
   // ✅ Check for token in cookie
   if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
