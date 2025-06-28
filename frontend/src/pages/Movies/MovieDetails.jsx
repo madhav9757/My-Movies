@@ -88,7 +88,7 @@ const MovieDetails = () => {
           src={
             movie.image?.startsWith('https') || movie.image?.startsWith('upload')
               ? movie.image
-              : `http://localhost:3000${movie.image}`
+              : `https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=`
           }
           alt={movie.title}
           onError={(e) => (e.target.src = '/placeholder.jpg')}
