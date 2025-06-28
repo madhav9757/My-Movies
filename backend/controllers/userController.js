@@ -87,6 +87,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
     if (req.user) {
+        console.log('✅ CONTROLLER: req.user =', req.user?.email);
         res.status(200).json({
             _id: req.user._id,
             name: req.user.name,
