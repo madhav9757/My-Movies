@@ -29,6 +29,8 @@ const protect = asyncHandler(async (req, res, next) => {
         res.status(401);
         throw new Error('Not authorized, user not found');
       }
+      console.log('✅ PROTECT: decoded token =', decoded);
+      console.log('✅ PROTECT: attached user =', req.user?.email);
 
       next();
     } catch (error) {
