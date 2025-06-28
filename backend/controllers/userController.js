@@ -97,7 +97,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             cloudinaryId: req.user.cloudinaryId,
             createdAt: req.user.createdAt,
             updatedAt: req.user.updatedAt,
-            token: generateToken(req.User._id), 
+            token: generateToken(null, req.user._id, req.user.isAdmin), 
         });
     } else {
         res.status(404);
