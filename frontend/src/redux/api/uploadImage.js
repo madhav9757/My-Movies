@@ -1,15 +1,30 @@
 import api from './axiosInstance.js';
-import { UPLOAD_URL } from '../constants.js';
+import { UPLOAD_URL} from '../constants.js';
 
-export const uploadImage = async (file) => {
+export const uploadImage = async (file, oldCloudinaryId) => {
   console.log('Uploading image:', file);
-  const { data } = await api.post(UPLOAD_URL, file, {
-    headers: {
-      'Content-Type': 'multipart/form-data', // ✅ Required so browser handles it correctly
-    },
-    withCredentials: true, // ✅ Required to send cookies (for auth)
+
+  if (oldCloudinaryId) {
+    try {
+      await api.post(`${UPLOAD_URL}/delete`, { publicId : oldCloudinaryId });
+    } catch (err) {
+      console.error('Failed to delete old image:', err?.response?.data?.message || err.message);
+    }
+  } else {
+    console.log('No old image to delete');
+  }
+
+  // Step 2: Upload new image
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const { data } = await api.post(UPLOAD_URL, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    withCredentials: true,
   });
 
-  console.log('Image uploaded successfully:', data);
-  return data;
+  return {
+    image: data.image,
+    publicId: data.publicId, // make sure your backend returns this
+  };
 };

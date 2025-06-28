@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { useGetMovieByIdQuery, useUpdateMovieMutation } from '../../redux/api/movies.js';
 import { useGetGenresQuery } from '../../redux/api/genre.js';
 import { uploadImage } from '../../redux/api/uploadImage.js';
@@ -13,31 +12,40 @@ const EditMovie = () => {
     const { data: genres = [] } = useGetGenresQuery();
     const { data: movie, isLoading } = useGetMovieByIdQuery(id);
     const [updateMovie] = useUpdateMovieMutation();
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        rating: '',
+        image: '',
+        cloudinaryId: '',
+        releaseDate: '',
+        genre: '',
+    });
 
-    const { register, handleSubmit, setValue } = useForm();
-
-    const [imageValue, setImageValue] = useState('');
     const [preview, setPreview] = useState('');
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [oldCloudinaryId, setOldCloudinaryId] = useState('');
 
     const API = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         if (movie) {
-            setValue('title', movie.title);
-            setValue('description', movie.description || '');
-            setValue('rating', movie.rating);
-            setValue('image', movie.image || '');
-            setValue('genre', movie.genre?._id || movie.genre || '');
+            setFormData({
+                title: movie.title || '',
+                description: movie.description || '',
+                rating: movie.rating || '',
+                image: movie.image || '',
+                cloudinaryId: movie.cloudinaryId || '',
+                releaseDate: movie.releaseDate
+                    ? new Date(movie.releaseDate).toISOString().split('T')[0]
+                    : '',
+                genre: movie.genre ? movie.genre._id : '',
+            });
 
-            const fullImageUrl = movie.image?.startsWith('http')
-                ? movie.image
-                : `${API}${movie.image}`;
-
-            console.log(fullImageUrl);
-            setPreview(fullImageUrl);
-            setImageValue(movie.image || '');
+            setPreview(movie.image);
+            setOldCloudinaryId(movie.cloudinaryId || '');
         }
-    }, [movie, setValue]);
+    }, [movie, setFormData]);
 
     useEffect(() => {
         return () => {
@@ -47,41 +55,66 @@ const EditMovie = () => {
         };
     }, [preview]);
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
     const handleImageUpload = async (file) => {
-        if (!file) return;
+        if (file instanceof File) {
 
-        const formData = new FormData();
-        formData.append('image', file);
+            setUploadingImage(true); // 🟡 Start loader
 
-        try {
-            const res = await uploadImage(formData);
-            const imageUrl = res.image.startsWith('http') ? res.image : `${API}${res.image}`;
+            try {
+                const { image, publicId } = await uploadImage(file, oldCloudinaryId);
 
-            setImageValue(res.image);
-            setValue('image', res.image); // for react-hook-form
-            setPreview(imageUrl);
-            setSelectedFile(file);
-            setImageSource('upload');
-        } catch (err) {
-            console.error('Upload failed', err);
+                setFormData((prev) => ({
+                    ...prev,
+                    image,
+                    cloudinaryId: publicId,
+                }));
+                setOldCloudinaryId(publicId);
+                setPreview(image);
+            } catch (err) {
+                console.error('Upload failed:', err);
+            } finally {
+                setUploadingImage(false); // ✅ Stop loader
+            }
+        } else {
+            // It's a URL
+            setValue('image', file);
+            setPreview(file);
         }
     };
 
-    const onSubmit = async (data) => {
-        const formData = {
-            ...data,
-            image: imageValue,
-            genre: typeof data.genre === 'object' && data.genre._id
-                ? data.genre._id
-                : data.genre,
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const {
+            title,
+            description,
+            rating,
+            image,
+            cloudinaryId,
+            releaseDate,
+            genre,
+        } = formData;
+
+        const updatedData = {
+            title,
+            description,
+            rating: Number(rating),
+            image,
+            cloudinaryId,
+            releaseDate,
+            genre: typeof genre === 'object' && genre._id ? genre._id : genre,
         };
 
         try {
-            console.log('Final data being sent to updateMovie:', formData);
-            await updateMovie({ id, ...formData }).unwrap();
+            await updateMovie({ id, ...updatedData }).unwrap();
             navigate('/movies');
         } catch (err) {
             console.error('Update failed:', err);
+            alert('Failed to update movie. Please try again.');
         }
     };
 
@@ -91,11 +124,29 @@ const EditMovie = () => {
         <div className="edit-movie-wrapper">
             <div className="edit-movie-container">
                 <h2>Edit Movie</h2>
-                <form onSubmit={handleSubmit(onSubmit)} className="movie-form">
+                <form onSubmit={onSubmit} className="movie-form">
                     <div className="edit-form-left">
-                        <input {...register('title')} placeholder="Title" required />
-                        <input type="number" step="0.1" {...register('rating')} placeholder="Rating" required />
-                        <select {...register('genre')} defaultValue={movie?.genre || ''}>
+                        <input
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            placeholder="Title"
+                            required
+                        />
+                        <input
+                            type="number"
+                            step="0.1"
+                            name="rating"
+                            value={formData.rating}
+                            onChange={handleChange}
+                            placeholder="Rating"
+                            required
+                        />
+                        <select
+                            name="genre"
+                            value={formData.genre}
+                            onChange={handleChange}
+                        >
                             <option value="" disabled>Select Genre</option>
                             {genres.map((g) => (
                                 <option key={g._id} value={g._id}>{g.name}</option>
@@ -103,33 +154,32 @@ const EditMovie = () => {
                         </select>
 
                         <ImageInput
-                            value={imageValue}
-                            onChange={async (val) => {
-                                if (typeof val === 'string') {
-                                    setImageValue(val);
-                                    setValue('image', val);
-                                    setSelectedFile(null);
-                                    setImageSource('url');
-                                    setPreview(val);
-                                } else if (val instanceof File) {
-                                    await handleImageUpload(val);
-                                }
-                            }}
+                            value={formData.image}
+                            onChange={handleImageUpload}
                             previewUrl={preview}
                             setPreviewUrl={setPreview}
+                            uploading={uploadingImage}
                         />
-
                         <p className="image-note">Note: You can either upload an image or paste an image URL.</p>
                     </div>
 
                     <div className="edit-form-right">
+                        <input
+                            type="date"
+                            name="releaseDate"
+                            value={formData.releaseDate}
+                            onChange={handleChange}
+                            required
+                        />
                         <textarea
-                            {...register('description')}
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
                             placeholder="Movie Description"
                             rows={10}
                             required
                         />
-                        <button type="submit">✅ Save Changes</button>
+                        <button type="submit" disabled={isLoading}>✅ Save Changes</button>
                     </div>
                 </form>
             </div>

@@ -21,31 +21,30 @@ const GenreMovies = () => {
   }, [genres, genreId]);
 
   useEffect(() => {
+    if (!genreId || !allMovies?.length) return;
+
     const genreMovies = allMovies.filter((movie) => {
-      if (typeof movie.genre === 'object') return movie.genre._id === genreId;
-      return movie.genre === genreId;
+      const movieGenreId =
+        typeof movie.genre === 'object' ? movie.genre._id : movie.genre;
+
+      return movieGenreId === genreId;
     });
 
     let result = [...genreMovies];
 
-    if (search) {
+    if (search.trim()) {
+      const keyword = search.trim().toLowerCase();
       result = result.filter((movie) =>
-        movie.title.toLowerCase().includes(search.toLowerCase())
+        movie.title?.toLowerCase().trim().includes(keyword)
       );
     }
 
-    switch (sortBy) {
-      case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'title':
-        result.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'date':
-        result.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-        break;
-      default:
-        break;
+    if (sortBy === 'rating') {
+      result.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'title') {
+      result.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === 'date') {
+      result.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
     }
 
     setFilteredMovies(result);
@@ -77,7 +76,7 @@ const GenreMovies = () => {
       {filteredMovies.length > 0 ? (
         <div className="movie-grid">
           {filteredMovies.map((movie) => (
-            <MovieCard key={movie._id} movie={movie} /> 
+            <MovieCard key={movie._id} movie={movie} />
           ))}
         </div>
       ) : (

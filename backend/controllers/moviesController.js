@@ -37,6 +37,7 @@ const createMovie = asyncHandler(async (req, res) => {
     director,
     rating,
     image,
+    cloudinaryId : null ,
   });
 
   const created = await movie.save();
@@ -50,7 +51,7 @@ const updateMovie = asyncHandler(async (req, res) => {
   const movie = await Movie.findById(req.params.id);
 
   if (movie) {
-    const { title, genre, description, releaseDate, director, rating, image } = req.body;
+    const { title, genre, description, releaseDate, director, rating, image, cloudinaryId } = req.body;
 
     movie.title = title || movie.title;
     movie.genre = genre || movie.genre;
@@ -59,6 +60,7 @@ const updateMovie = asyncHandler(async (req, res) => {
     movie.director = director || movie.director;
     movie.rating = rating ?? movie.rating;
     movie.image = image || movie.image;
+    movie.cloudinaryId = cloudinaryId || movie.cloudinaryId;
 
     const updated = await movie.save();
     res.json(updated);

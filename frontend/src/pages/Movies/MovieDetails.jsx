@@ -29,7 +29,6 @@ const MovieDetails = () => {
 
   const userReview = movie.reviews.find((r) => r.user === user?._id);
   const otherReviews = movie.reviews.filter((r) => r.user !== user?._id);
-  console.log('User Review:', userReview);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this movie?')) {

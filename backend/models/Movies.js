@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -54,6 +55,10 @@ const movieSchema = new mongoose.Schema({
     type: Number,
     min: 0,
     max: 10,
+  },
+  cloudinaryId: {
+    type: String,
+    default: '',
   },
   reviews: [reviewSchema],
   createdAt: {

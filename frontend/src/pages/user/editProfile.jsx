@@ -10,8 +10,6 @@ import ImageInput from '../../components/uploadImageInput.jsx';
 
 const EditProfile = () => {
 
-  const API = import.meta.env.VITE_API_URL;
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
@@ -24,9 +22,13 @@ const EditProfile = () => {
     email: '',
     password: '',
     image: '',
+    cloudinaryId: '',
   });
-  const [imageSource, setImageSource] = useState('');
+  const [oldCloudinaryId, setOldCloudinaryId] = useState('');
+  const [imageSource, setImageSource] = useState(''); // 'upload' or 'url'
   const [previewUrl, setPreviewUrl] = useState('');
+  const [showBanner, setShowBanner] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -35,11 +37,10 @@ const EditProfile = () => {
         email: profile.email || '',
         password: '',
         image: profile.image || '',
+        cloudinaryId: profile.cloudinaryId || '',
       });
-      const fullImageUrl = profile.image?.startsWith('http')
-        ? profile.image
-        : `${API}${profile.image}`;
-      setPreviewUrl(fullImageUrl);
+      setOldCloudinaryId(profile.cloudinaryId || '');
+      setPreviewUrl(profile.image);
     }
   }, [profile, setFormData]);
 
@@ -58,25 +59,39 @@ const EditProfile = () => {
 
   const handleImageInput = async (file) => {
     if (file instanceof File) {
-      const imageData = new FormData();
-      imageData.append('image', file);
       try {
-        const { image } = await uploadImage(imageData);
-        const fullImageUrl = image.startsWith('http') ? image : `${API}${image}`;
-        setFormData((prev) => ({ ...prev, image: fullImageUrl }));
-        setPreviewUrl(fullImageUrl);
+        setUploadingImage(true);
+
+        const { image, publicId } = await uploadImage(file, oldCloudinaryId); // 🟡 Make sure this returns correct field names
+
+        setFormData((prev) => ({
+          ...prev,
+          image,
+          cloudinaryId: publicId,
+        }));
+
+        setOldCloudinaryId(publicId);
+        setImageSource('upload'); // Track source
+        setPreviewUrl(image);
         setImageSource('upload');
       } catch (err) {
-        console.error('Image upload failed:', err);
+        console.error('Image upload failed:', err); // 🔍 Will show real issue
         alert('Image upload failed. Please try again.');
+      } finally {
+        setUploadingImage(false); // Stop loader
       }
     } else {
-      // It's a URL
-      setFormData((prev) => ({ ...prev, image: value }));
+      // URL case
+      setFormData((prev) => ({ ...prev, image: file }));
       setPreviewUrl(file);
       setImageSource('url');
     }
   };
+
+  useEffect(() => {
+    console.log('Updated formData:', formData);
+  }, [formData]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,6 +100,7 @@ const EditProfile = () => {
         name: formData.name,
         email: formData.email,
         image: formData.image,
+        cloudinaryId: formData.cloudinaryId, // ✅ Send to backend
       };
 
       if (formData.password) {
@@ -92,9 +108,17 @@ const EditProfile = () => {
       }
 
       const updated = await updateProfile(dataToSubmit).unwrap();
+
       dispatch(setCredentials(updated));
       localStorage.setItem('userInfo', JSON.stringify(updated));
       navigate('/profile');
+
+      // ✅ Success banner logic here
+      if (updated.image !== profile.image) {
+        setShowBanner(true);
+        setTimeout(() => setShowBanner(false), 3000);
+      }
+
     } catch (err) {
       console.error('Profile update failed:', err);
       alert('Profile update failed: ' + (err?.data?.message || 'Unknown error'));
@@ -149,15 +173,20 @@ const EditProfile = () => {
           </div>
 
           <div className="profile-right">
+            {showBanner && (
+              <div className="banner success-banner">
+                ✅ Profile image updated successfully!
+              </div>
+            )}
             <ImageInput
               value={formData.image}
               onChange={handleImageInput}
               previewUrl={previewUrl}
               setPreviewUrl={setPreviewUrl}
+              uploading={uploadingImage} // ✅ New prop
             />
           </div>
         </div>
-
 
         {isSuccess && <p className="success-msg">✅ Profile updated successfully!</p>}
         {isError && <p className="error-msg">❌ {error?.data?.message || 'Update failed'}</p>}

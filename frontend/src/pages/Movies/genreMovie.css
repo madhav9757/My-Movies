@@ -65,74 +65,10 @@
   margin-top: 2rem;
 }
 
-.movie-cards {
+.movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
-}
-
-.movie-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s;
-}
-
-.movie-card:hover {
-  transform: translateY(-5px);
-}
-
-.movie-card img {
-  width: 100%;
-  height: 350px;
-  object-fit: cover;
-  border-bottom: 1px solid #eee;
-}
-
-.movie-details {
-  padding: 1rem;
-}
-
-.movie-details h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.movie-meta {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 0.25rem;
-}
-
-.movie-description {
-  font-size: 0.95rem;
-  color: #444;
-  margin: 0.75rem 0;
-}
-
-.rating {
-  display: inline-flex;
-  align-items: center;
-  background: #facc15;
-  color: #000;
-  font-weight: bold;
-  padding: 0.2rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.movie-details a {
-  display: inline-block;
-  margin-top: 0.75rem;
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.movie-details a:hover {
-  text-decoration: underline;
 }
 
 /* Responsive */

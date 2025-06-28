@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { FaFilm, FaStar, FaUser, FaCalendarAlt, FaEdit } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import {
@@ -10,8 +10,6 @@ import ImageInput from '../uploadImageInput.jsx';
 import { uploadImage } from '../../redux/api/uploadImage.js';
 import './addMovie.css';
 
-const API = import.meta.env.VITE_API_URL;
-
 const AddMovie = () => {
   const [form, setForm] = useState({
     title: '',
@@ -21,6 +19,7 @@ const AddMovie = () => {
     director: '',
     rating: '',
     image: '',
+    cloudinaryId: '',
   });
 
   const [imageSource, setImageSource] = useState('');
@@ -28,6 +27,7 @@ const AddMovie = () => {
   const navigate = useNavigate();
   const [createMovie] = useCreateMovieMutation();
   const { data: genres = [] } = useGetGenresQuery();
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,17 +35,18 @@ const AddMovie = () => {
 
   const handleImageChange = async (value) => {
     if (value instanceof File) {
-      // Upload image
-      const formData = new FormData();
-      formData.append('image', value);
       try {
-        const res = await uploadImage(formData);
-        const imageUrl = res.image.startsWith('http') ? res.image : `${API}${res.image}`;
-        setForm((prev) => ({ ...prev, image: res.image }));
-        setPreview(imageUrl);
+
+        setUploading(true);
+        const {image, publicId} = await uploadImage(value, form.cloudinaryId);
+
+        setForm((prev) => ({ ...prev, image, cloudinaryId: publicId }));
+        setPreview(image);
         setImageSource('upload');
       } catch (err) {
         console.error('Upload failed', err);
+      } finally {
+        setUploading(false);
       }
     } else {
       // It's a URL
@@ -106,12 +107,13 @@ const AddMovie = () => {
             <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
           </div>
 
-          <div style={{ gridColumn: '1 / -1' }}>
+          <div style={{ gridColumn: 'span 2' }}>
             <ImageInput
               value={form.image}
               onChange={handleImageChange}
               previewUrl={preview}
               setPreviewUrl={setPreview}
+              uploading={uploading}
             />
             <p className="image-note">Note: You can either upload an image or paste an image URL.</p>
           </div>
