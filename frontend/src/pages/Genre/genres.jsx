@@ -63,7 +63,7 @@ const GenreList = () => {
     <div className="genre-list-grid-container">
       <div className="genre-list-header">
         <h2>🎬 Genres</h2>
-        <button className="add-genre-btn" onClick={() => navigate('/admin/genres/new')}>
+        <button className="add-genre-btn" onClick={() => navigate('/genres/new')}>
           ➕ Add Genre
         </button>
       </div>

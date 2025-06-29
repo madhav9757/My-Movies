@@ -6,7 +6,7 @@
   height: 95%;
   width: auto;
   background-color: #f4f4f4;
-  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .edit-movie-container {

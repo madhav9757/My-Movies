@@ -38,7 +38,7 @@ const AddMovie = () => {
       try {
 
         setUploading(true);
-        const {image, publicId} = await uploadImage(value, form.cloudinaryId);
+        const { image, publicId } = await uploadImage(value, form.cloudinaryId);
 
         setForm((prev) => ({ ...prev, image, cloudinaryId: publicId }));
         setPreview(image);
@@ -72,42 +72,62 @@ const AddMovie = () => {
         <h2>Add New Movie</h2>
 
         <div className="add-form-grid">
-          <div className="input-icon-wrapper">
-            <MdTitle className="input-icon" />
-            <input type="text" name="title" placeholder="Movie Title" value={form.title} onChange={handleChange} required />
+
+          {/* Title Field */}
+          <div className="form-field-group">
+            <div className="input-icon-wrapper">
+              <MdTitle className="input-icon" />
+              <input type="text" name="title" placeholder="Movie Title" value={form.title} onChange={handleChange} required />
+            </div>
           </div>
 
-          <div className="input-icon-wrapper">
-            <FaUser className="input-icon" />
-            <input type="text" name="director" placeholder="Director" value={form.director} onChange={handleChange} />
+          {/* Director Field */}
+          <div className="form-field-group">
+            <div className="input-icon-wrapper">
+              <FaUser className="input-icon" />
+              <input type="text" name="director" placeholder="Director" value={form.director} onChange={handleChange} />
+            </div>
           </div>
 
-          <div className="input-icon-wrapper">
-            <FaStar className="input-icon" />
-            <input type="number" name="rating" placeholder="Rating (0–10)" value={form.rating} onChange={handleChange} min="0" max="10" step="0.1" />
+          {/* Rating Field */}
+          <div className="form-field-group">
+            <div className="input-icon-wrapper">
+              <FaStar className="input-icon" />
+              <input type="number" name="rating" placeholder="Rating (0–10)" value={form.rating} onChange={handleChange} min="0" max="10" step="0.1" />
+            </div>
           </div>
 
-          <div className="input-icon-wrapper">
-            <FaCalendarAlt className="input-icon" />
-            <input type="date" name="releaseDate" value={form.releaseDate} onChange={handleChange} />
+          {/* Release Date Field */}
+          <div className="form-field-group">
+            <div className="input-icon-wrapper">
+              <FaCalendarAlt className="input-icon" />
+              <input type="date" name="releaseDate" value={form.releaseDate} onChange={handleChange} />
+            </div>
           </div>
 
-          <div className="input-icon-wrapper">
-            <FaFilm className="input-icon" />
-            <select name="genre" value={form.genre} onChange={handleChange} required>
-              <option value="">Select Genre</option>
-              {genres.map((g) => (
-                <option key={g._id} value={g._id}>{g.name}</option>
-              ))}
-            </select>
+          {/* Genre Field */}
+          <div className="form-field-group">
+            <div className="input-icon-wrapper">
+              <FaFilm className="input-icon" />
+              <select name="genre" value={form.genre} onChange={handleChange} required>
+                <option value="">Select Genre</option>
+                {genres.map((g) => (
+                  <option key={g._id} value={g._id}>{g.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="input-icon-wrapper">
-            <FaEdit className="input-icon" />
-            <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+          {/* Description Field (now spans 2 columns on desktop) */}
+          <div className="form-field-group span-2-columns"> {/* Added class for spanning */}
+            <div className="input-icon-wrapper">
+              <FaEdit className="input-icon" />
+              <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+            </div>
           </div>
 
-          <div style={{ gridColumn: 'span 2' }}>
+          {/* Image Input (now spans 2 columns on desktop) */}
+          <div className="form-field-group span-2-columns"> {/* Added class for spanning */}
             <ImageInput
               value={form.image}
               onChange={handleImageChange}
