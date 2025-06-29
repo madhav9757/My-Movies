@@ -182,6 +182,9 @@
   .sidebar {
     display: none;
   }
+  .mobile-title {
+  display: none;
+}
 
   .desktop-nav {
     display: flex;
@@ -191,6 +194,15 @@
 @media (max-width: 768px) {
   .desktop-nav {
     display: none;
+  }
+
+  .desktop-title {
+    display: none;
+  }
+
+  .mobile-title {
+    display: inline;
+    font-size: 1.2rem;
   }
 
   .menu-icon {

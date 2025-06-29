@@ -24,13 +24,24 @@ const Header = () => {
     navigate('/');
   };
 
+  const getMobileTitle = () => {
+    const path = location.pathname;
+    if (path.startsWith('/movies')) return '🎬 Movies';
+    if (path.startsWith('/profile')) return '👤 Profile';
+    if (path.startsWith('/genres')) return '🎭 Genres';
+    if (path.startsWith('/login')) return '🔑 Login';
+    if (path.startsWith('/signup')) return '📝 Sign Up';
+    return '🏠 Home';
+  };
+
   const isActive = (path) => location.pathname === path;
 
   return (
     <>
       <header className="top-bar">
         <div className="logo" onClick={() => handleNavigate('/')}>
-          <span role="img" aria-label="clapper">🎬</span> MovieApp
+          <span className="desktop-title"><span role="img" aria-label="clapper">🎬</span> MovieApp</span>
+          <span className="mobile-title">{getMobileTitle()}</span>
         </div>
 
         {/* Desktop Nav */}

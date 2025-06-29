@@ -3,6 +3,7 @@ import { useGetMoviesQuery } from '../../redux/api/movies.js';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import MovieCard from '../../components/movie/movieCard.jsx';
+import { MdAddCircleOutline } from 'react-icons/md';
 import './movies.css';
 
 const Movies = () => {
@@ -31,7 +32,8 @@ const Movies = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Link to="/movies/add" className="add-movie-btn">
-            + Add Movie
+            <MdAddCircleOutline/>
+            <span className="btn-text">Add Movie</span>
           </Link>
         </div>
       </div>
