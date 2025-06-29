@@ -23,8 +23,8 @@ router.post('/:id/reviews', protect, checkId, movieReviews);
 router.delete('/:id/reviews/:reviewId', protect, checkId, deleteReview);
 
 // Protected (admin only)
-router.post('/', protect, admin, createMovie);
-router.put('/:id', protect, admin, updateMovie);
-router.delete('/:id', protect, admin, deleteMovie);
+router.post('/', protect, createMovie);
+router.put('/:id', protect, updateMovie);
+router.delete('/:id', protect, deleteMovie);
 
 export default router;
