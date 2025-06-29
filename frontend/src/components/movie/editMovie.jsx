@@ -181,7 +181,7 @@ const EditMovie = () => {
                             rows={10}
                             required
                         />
-                        <button type="submit" disabled={isLoading}>✅ Save Changes</button>
+                        <button className='movie-edit-form-btn' type="submit" disabled={isLoading}>✅ Save Changes</button>
                     </div>
                 </form>
             </div>

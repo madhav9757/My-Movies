@@ -1,111 +1,303 @@
 .edit-movie-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  height: 95%;
-  width: auto;
-  background-color: #f4f4f4;
-  overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed from center to flex-start for better top alignment on scroll */
+    padding: 2.5rem 2rem; /* Adjusted default padding */
+    min-height: calc(100vh - var(--header-height) - var(--footer-height)); /* Ensure it takes available height */
+    background-color: #f0f2f5; /* A slightly softer background */
+    overflow-x: hidden; /* Prevent horizontal scroll for the wrapper */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box; /* Crucial for responsiveness */
+    width: 100%; /* Ensure wrapper takes full width */
 }
 
 .edit-movie-container {
-  background-color: #fff;
-  border-radius: 1rem;
-  padding: 2rem;
-  width: 100%;
-  max-width: 900px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #fff;
+    border-radius: 1rem; /* More rounded corners */
+    padding: 2.5rem; /* More internal padding */
+    width: 100%;
+    max-width: 800px; /* Consistent max-width */
+    box-shadow: 0 10px 30px var(--shadow-light); /* More pronounced shadow */
+    box-sizing: border-box; /* Crucial for responsiveness */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack heading and form */
+    gap: 2.2rem; /* Consistent gap between heading and form */
 }
 
 .edit-movie-container h2 {
-  text-align: center;
-  color: #1f2937;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
+    text-align: center;
+    color: var(--secondary-blue); /* Consistent heading color */
+    margin-bottom: 0; /* Remove default margin as container uses gap */
+    font-size: 2rem; /* Larger heading font size */
+    font-weight: 700;
 }
 
+/* Main form container */
 .movie-form {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+    gap: 1.8rem; /* Consistent gap between columns/items */
+    min-width: 0; /* Allow the form to shrink */
+    box-sizing: border-box;
 }
 
 .edit-form-left,
 .edit-form-right {
-  flex: 1 1 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    flex: 1 1 45%; /* Adjusted flex-basis to be percentage-based for better initial scaling */
+    min-width: 280px; /* A more reasonable minimum width for each column */
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem; /* Gap between inputs within each column */
+    box-sizing: border-box;
 }
 
+/* Universal input styling for consistency */
 .movie-form input,
 .movie-form select,
 .movie-form textarea {
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  background-color: #f9fafb;
-  transition: border-color 0.2s;
+    width: 100%; /* Ensure full width within their parent column */
+    padding: 0.9rem 1.2rem; /* Generous padding */
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem; /* More rounded corners */
+    font-size: 1.05rem; /* Slightly larger font */
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    min-width: 0; /* Allow inputs to shrink aggressively */
+    box-sizing: border-box; /* Include padding in width */
+    overflow: hidden; /* Hide overflow for input text */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Keep text on one line for inputs (not textarea) */
 }
 
+/* Specific styling for TEXTAREA */
+.movie-form textarea {
+    white-space: normal; /* Override nowrap for textarea to allow text wrapping */
+    resize: vertical; /* Allow vertical resizing only */
+    min-height: 120px; /* Taller textarea for more content */
+    line-height: 1.5; /* Improved readability for multi-line text */
+    height: auto; /* Allow height to adjust based on content with min-height */
+    overflow-y: auto; /* Add scrollbar if content exceeds min-height */
+}
+
+
+/* Placeholder styling */
+.movie-form input::placeholder,
+.movie-form textarea::placeholder {
+    color: var(--placeholder-icon-color);
+    opacity: 0.8;
+}
+
+/* Focus states */
 .movie-form input:focus,
 .movie-form textarea:focus,
 .movie-form select:focus {
-  border-color: #2563eb;
-  outline: none;
-  background-color: #fff;
+    border-color: var(--primary-blue);
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25); /* Stronger focus shadow */
 }
 
-.file-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+/* Custom dropdown arrow for select elements */
+.movie-form select {
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%236b7280" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center; /* Position for custom arrow */
+    background-size: 1.3em; /* Size of custom arrow */
+    padding-right: 3rem; /* Space for the custom arrow */
 }
 
-.file-btn {
-  background-color: #6366f1;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-.file-btn:hover {
-  background-color: #4f46e5;
-}
-
-.image-preview {
+/* Button Styling */
+.movie-edit-form-btn {
   width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  transition: opacity 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.movie-form button {
-  padding: 0.75rem;
-  background-color: #2563eb;
+  /* Full width */
+  padding: 1.1rem;
+  /* More padding for a bigger button */
+  font-size: 1.1rem;
+  /* Larger font size */
+  background-color: var(--primary-blue);
+  /* Use consistent primary blue */
   color: white;
+  font-weight: bold;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 0.8rem;
+  /* More rounded button */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  /* Space between text and icon */
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+  /* Stronger shadow */
+  margin-top: 1rem;
+  /* Space above the button */
+  box-sizing: border-box;
+  /* Include padding in width */
+  /* On desktop, this button will be in .edit-form-right, taking its full width */
+  /* On mobile, when columns stack, it will also be full width */
 }
 
-.movie-form button:hover {
-  background-color: #1d4ed8;
+.movie-edit-form-btn:hover {
+  background-color: #4338ca;
+  /* Darker blue on hover */
+  transform: translateY(-3px);
+  /* More pronounced lift */
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.5);
+  /* Stronger hover shadow */
 }
 
+.movie-edit-form-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+}
+
+/* --- Responsive Adjustments --- */
+
+/* For smaller desktops / larger tablets */
+@media (max-width: 900px) {
+  .edit-movie-wrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .edit-movie-container {
+    padding: 2rem;
+    gap: 1.8rem;
+  }
+
+  .edit-movie-container h2 {
+    font-size: 1.9rem;
+  }
+
+  .movie-form {
+    gap: 1.5rem;
+  }
+
+  .edit-form-left,
+  .edit-form-right {
+    gap: 1rem;
+  }
+
+  .movie-form input,
+  .movie-form select,
+  .movie-form textarea {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.6rem;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  .movie-form button {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Tablets and Mobile Phones - Collapse to single column */
 @media (max-width: 768px) {
   .movie-form {
     flex-direction: column;
+    /* Stack columns vertically */
+    gap: 1.5rem;
+    /* Adjust gap between stacked columns */
+  }
+
+  .edit-form-left,
+  .edit-form-right {
+    flex-basis: auto;
+    /* Allow them to take full width */
+    width: 100%;
+    /* Explicitly set to full width */
+    min-width: 0;
+    /* Ensure they can truly shrink */
+    gap: 1rem;
+    /* Gap between items within each now-stacked column */
+  }
+
+  .edit-movie-wrapper {
+    padding: 1.5rem 0.8rem;
+    /* Tighter overall padding for mobile */
+  }
+
+  .edit-movie-container {
+    padding: 1.5rem;
+    /* Tighter internal padding */
+    border-radius: 0.75rem;
+    gap: 1.5rem;
+  }
+
+  .edit-movie-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .movie-form input,
+  .movie-form select,
+  .movie-form textarea {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    border-radius: 0.6rem;
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+
+  .image-note {
+    font-size: 0.8rem;
+    padding-left: 0.3rem;
+    margin-top: -0.3rem;
+    /* Further adjust for mobile */
+  }
+
+  .movie-form button {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+    border-radius: 0.7rem;
+  }
+}
+
+/* Ultra-small phones */
+@media (max-width: 480px) {
+  .edit-movie-wrapper {
+    padding: 1rem 0.5rem;
+  }
+
+  .edit-movie-container {
+    padding: 1rem;
+    border-radius: 0.6rem;
+    gap: 1rem;
+  }
+
+  .edit-movie-container h2 {
+    font-size: 1.4rem;
+  }
+
+  .edit-form-left,
+  .edit-form-right {
+    gap: 0.8rem;
+    /* Even tighter gap for small screens */
+  }
+
+  .movie-form input,
+  .movie-form select,
+  .movie-form textarea {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    min-height: 70px;
+  }
+
+  .movie-form button {
+    padding: 0.8rem;
+    font-size: 0.9rem;
   }
 }
