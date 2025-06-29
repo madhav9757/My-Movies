@@ -6,17 +6,16 @@ import Movie from '../models/Movies.js';
 // @access  Public
 const getMovies = asyncHandler(async (req, res) => {
   const movies = await Movie.find().populate('genre', 'name slug');
-  res.json(movies);
+  res.status(200).json(movies);
 });
 
-// @desc    Get movie by ID
+// @desc    Get single movie by ID
 // @route   GET /api/movies/:id
 // @access  Public
 const getMovieById = asyncHandler(async (req, res) => {
   const movie = await Movie.findById(req.params.id).populate('genre', 'name slug');
-
   if (movie) {
-    res.json(movie);
+    res.status(200).json(movie);
   } else {
     res.status(404);
     throw new Error('Movie not found');
@@ -25,7 +24,7 @@ const getMovieById = asyncHandler(async (req, res) => {
 
 // @desc    Create new movie
 // @route   POST /api/movies
-// @access  Admin
+// @access  Private/Admin
 const createMovie = asyncHandler(async (req, res) => {
   const { title, genre, description, releaseDate, director, rating, image } = req.body;
 
@@ -37,90 +36,17 @@ const createMovie = asyncHandler(async (req, res) => {
     director,
     rating,
     image,
-    cloudinaryId : null ,
+    cloudinaryId: null,
   });
 
-  const created = await movie.save();
-  res.status(201).json(created);
+  const createdMovie = await movie.save();
+  res.status(201).json(createdMovie);
 });
 
-// @desc    Update movie
+// @desc    Update a movie
 // @route   PUT /api/movies/:id
-// @access  Admin
+// @access  Private/Admin
 const updateMovie = asyncHandler(async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-
-  if (movie) {
-    const { title, genre, description, releaseDate, director, rating, image, cloudinaryId } = req.body;
-
-    movie.title = title || movie.title;
-    movie.genre = genre || movie.genre;
-    movie.description = description || movie.description;
-    movie.releaseDate = releaseDate || movie.releaseDate;
-    movie.director = director || movie.director;
-    movie.rating = rating ?? movie.rating;
-    movie.image = image || movie.image;
-    movie.cloudinaryId = cloudinaryId || movie.cloudinaryId;
-
-    const updated = await movie.save();
-    res.json(updated);
-  } else {
-    res.status(404);
-    throw new Error('Movie not found');
-  }
-});
-
-// @desc    Delete movie
-// @route   DELETE /api/movies/:id
-// @access  Admin
-const deleteMovie = asyncHandler(async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-
-  if (movie) {
-    await movie.deleteOne();
-    res.json({ message: 'Movie deleted' });
-  } else {
-    res.status(404);
-    throw new Error('Movie not found');
-  }
-});
-
-const movieReviews = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body;
-  const movie = await Movie.findById(req.params.id);
-
-  if (movie) {
-    // prevent duplicate review by same user (optional)
-    const alreadyReviewed = movie.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    );
-
-    if (alreadyReviewed) {
-      res.status(400);
-      throw new Error('You have already reviewed this movie');
-    }
-
-    const review = {
-      user: req.user._id,
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-    };
-
-    movie.reviews.push(review);
-    movie.averageRating =
-      movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
-
-    await movie.save();
-    res.status(201).json({ message: 'Review added' });
-  } else {
-    throw new Error('Movie not found');
-  }
-});
-
-// DELETE /api/movies/:movieId/reviews/:reviewId
-const deleteReview = asyncHandler(async (req, res) => {
-  const { movieId, reviewId } = req.params;
   const movie = await Movie.findById(req.params.id);
 
   if (!movie) {
@@ -128,23 +54,108 @@ const deleteReview = asyncHandler(async (req, res) => {
     throw new Error('Movie not found');
   }
 
-  const review = movie.reviews.id(reviewId);
+  const {
+    title,
+    genre,
+    description,
+    releaseDate,
+    director,
+    rating,
+    image,
+    cloudinaryId,
+  } = req.body;
 
+  movie.title = title || movie.title;
+  movie.genre = genre || movie.genre;
+  movie.description = description || movie.description;
+  movie.releaseDate = releaseDate || movie.releaseDate;
+  movie.director = director || movie.director;
+  movie.rating = rating ?? movie.rating;
+  movie.image = image || movie.image;
+  movie.cloudinaryId = cloudinaryId || movie.cloudinaryId;
+
+  const updatedMovie = await movie.save();
+  res.status(200).json(updatedMovie);
+});
+
+// @desc    Delete a movie
+// @route   DELETE /api/movies/:id
+// @access  Private/Admin
+const deleteMovie = asyncHandler(async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+
+  if (!movie) {
+    res.status(404);
+    throw new Error('Movie not found');
+  }
+
+  await movie.deleteOne();
+  res.status(200).json({ message: 'Movie deleted successfully' });
+});
+
+// @desc    Add a review
+// @route   POST /api/movies/:id/reviews
+// @access  Private
+const movieReviews = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+  const movie = await Movie.findById(req.params.id);
+
+  if (!movie) {
+    res.status(404);
+    throw new Error('Movie not found');
+  }
+
+  const alreadyReviewed = movie.reviews.find(
+    (r) => r.user.toString() === req.user._id.toString()
+  );
+
+  if (alreadyReviewed) {
+    res.status(400);
+    throw new Error('You have already reviewed this movie');
+  }
+
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+
+  movie.reviews.push(review);
+  movie.numReviews = movie.reviews.length;
+  movie.averageRating =
+    movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
+
+  await movie.save();
+  res.status(201).json({ message: 'Review added successfully' });
+});
+
+// @desc    Delete a review
+// @route   DELETE /api/movies/:movieId/reviews/:reviewId
+// @access  Private
+const deleteReview = asyncHandler(async (req, res) => {
+  const { movieId, reviewId } = req.params;
+
+  const movie = await Movie.findById(movieId);
+
+  if (!movie) {
+    res.status(404);
+    throw new Error('Movie not found');
+  }
+
+  const review = movie.reviews.id(reviewId);
   if (!review) {
     res.status(404);
     throw new Error('Review not found');
   }
 
-  // Optional: only allow user to delete their own review
   if (review.user.toString() !== req.user._id.toString()) {
     res.status(403);
     throw new Error('Not authorized to delete this review');
   }
 
-  // ✅ Remove review
   review.deleteOne();
 
-  // ✅ Recalculate ratings
   movie.numReviews = movie.reviews.length;
   movie.averageRating =
     movie.reviews.length > 0
@@ -152,7 +163,7 @@ const deleteReview = asyncHandler(async (req, res) => {
       : 0;
 
   await movie.save();
-  res.status(200).json({ message: 'Review deleted' });
+  res.status(200).json({ message: 'Review deleted successfully' });
 });
 
 export {
@@ -162,5 +173,5 @@ export {
   updateMovie,
   deleteMovie,
   movieReviews,
-  deleteReview
+  deleteReview,
 };

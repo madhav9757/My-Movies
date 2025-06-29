@@ -63,14 +63,13 @@ const EditMovie = () => {
     const handleImageUpload = async (file) => {
         if (file instanceof File) {
 
-            setUploadingImage(true); // 🟡 Start loader
-
             try {
+                setUploadingImage(true); // 🟡 Start loader
                 const { image, publicId } = await uploadImage(file, oldCloudinaryId);
 
                 setFormData((prev) => ({
                     ...prev,
-                    image,
+                    image: image,
                     cloudinaryId: publicId,
                 }));
                 setOldCloudinaryId(publicId);
@@ -82,7 +81,10 @@ const EditMovie = () => {
             }
         } else {
             // It's a URL
-            setValue('image', file);
+            setFormData((prev) => ({
+                ...prev,
+                image: file,
+            }));
             setPreview(file);
         }
     };

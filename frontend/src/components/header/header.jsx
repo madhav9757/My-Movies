@@ -48,8 +48,8 @@ const Header = () => {
                 Movies
               </button>
               <button
-                onClick={() => handleNavigate('/admin/genres')}
-                className={`nav-btn ${isActive('/admin/genres') ? 'active' : ''}`}
+                onClick={() => handleNavigate('/genres')}
+                className={`nav-btn ${isActive('/genres') ? 'active' : ''}`}
               >
                 Genres
               </button>

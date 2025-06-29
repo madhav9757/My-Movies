@@ -13,7 +13,7 @@ import store from './redux/store.js';
 import './index.css';
 
 import AdminRoute from './pages/admin/adminRoute.jsx';
-import GenreList from './pages/admin/genres.jsx';
+import GenreList from './pages/Genre/genres.jsx';
 import GenreCreate from './components/genreForm.jsx';
 import Movies from './pages/Movies/movies.jsx';
 import AddMovie from './components/movie/addMovie.jsx';
@@ -25,15 +25,15 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="profile/edit" element={<EditProfile />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/edit" element={<EditProfile />} />
 
-      <Route element={<AdminRoute />}>
-        <Route path="admin/genres" element={<GenreList />} />
-        <Route path="admin/genres/new" element={<GenreCreate />} />
-        <Route path="admin/genres/:genreId/movies" element={<GenreMovies />} />
+      <Route>
+        <Route path="/genres" element={<GenreList />} />
+        <Route path="/genres/new" element={<GenreCreate />} />
+        <Route path="/genres/:genreId/movies" element={<GenreMovies />} />
       </Route>
 
       <Route>

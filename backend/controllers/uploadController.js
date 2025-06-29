@@ -1,37 +1,41 @@
 import cloudinary from '../config/cloudinary.js';
 import streamifier from 'streamifier';
 
+// ✅ Upload image using buffer stream
 const uploadImage = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
 
   try {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: 'movie-app', // Optional: Cloudinary folder name
-      },
-      (error, result) => {
-        if (error) {
-          console.error('Cloudinary upload error:', error);
-          return res.status(500).json({ message: 'Cloudinary upload failed' });
-        }
-        res.status(200).json({
-          image: result.secure_url,
-          publicId: result.public_id,
-        }); // ✅ Return Cloudinary image URL
-      }
-    );
+    const streamUpload = () =>
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'movie-app',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
 
-    // Stream the in-memory buffer to Cloudinary
-    streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+    const result = await streamUpload();
+
+    res.status(200).json({
+      image: result.secure_url,
+      publicId: result.public_id,
+    });
   } catch (err) {
-    console.error('Upload failed:', err);
-    res.status(500).json({ message: 'Something went wrong during upload' });
+    console.error('Cloudinary upload error:', err);
+    res.status(500).json({ message: 'Cloudinary upload failed' });
   }
-}
+};
 
-const deleteImage =  async (req, res) => {
+// ✅ Delete image from Cloudinary
+const deleteImage = async (req, res) => {
   const { publicId } = req.body;
 
   if (!publicId) {
@@ -40,18 +44,16 @@ const deleteImage =  async (req, res) => {
 
   try {
     const result = await cloudinary.uploader.destroy(publicId);
-    console.log('Cloudinary delete result:', result);
 
-    if (result.result === 'ok') {
-      res.json({ message: 'Image deleted successfully' });
+    if (result.result === 'ok' || result.result === 'not found') {
+      res.json({ message: 'Image deleted successfully', result });
     } else {
       res.status(400).json({ message: 'Image not deleted', result });
     }
   } catch (err) {
     console.error('Cloudinary delete error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
-
 
 export { uploadImage, deleteImage };

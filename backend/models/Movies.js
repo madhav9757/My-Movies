@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import cloudinary from "../config/cloudinary.js";
 
+// ✅ Review subdocument schema
 const reviewSchema = new mongoose.Schema(
   {
     user: {
@@ -20,53 +20,53 @@ const reviewSchema = new mongoose.Schema(
     },
     comment: {
       type: String,
+      default: '',
     },
   },
   { timestamps: true }
 );
 
-const movieSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true,
+// ✅ Movie schema
+const movieSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    genre: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Genre',
+      required: true,
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    releaseDate: {
+      type: Date,
+    },
+    director: {
+      type: String,
+      default: '',
+    },
+    image: {
+      type: String,
+      default: '',
+    },
+    cloudinaryId: {
+      type: String,
+      default: '',
+    },
+    rating: {
+      type: Number,
+      min: 0,
+      max: 10,
+    },
+    reviews: [reviewSchema],
   },
-  genre: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Genre",
-    required: true,
-  },
-  description: {
-    type: String,
-    default: "",
-  },
-  releaseDate: {
-    type: Date,
-  },
-  director: {
-    type: String,
-    default: "",
-  },
-  image: {
-    type: String, 
-    default: '',  
-  },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 10,
-  },
-  cloudinaryId: {
-    type: String,
-    default: '',
-  },
-  reviews: [reviewSchema],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
-const Movie = mongoose.model("Movie", movieSchema);
-
+const Movie = mongoose.model('Movie', movieSchema);
 export default Movie;

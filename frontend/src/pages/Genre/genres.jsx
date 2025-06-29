@@ -19,7 +19,7 @@ const GenreList = () => {
   const navigate = useNavigate();
 
   const handleGenreClick = (genreId) => {
-    navigate(`/admin/genres/${genreId}/movies`);
+    navigate(`/genres/${genreId}/movies`);
   };
 
 
