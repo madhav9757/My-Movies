@@ -29,7 +29,7 @@ const Home = () => {
           <p className="welcome-user">Welcome back, {user.name} 👋</p>
         )}
 
-        <Link to="/admin/genres" className="browse-btn">Browse Genres</Link>
+        <Link to="/genres" className="browse-btn">Browse Genres</Link>
       </div>
     </div>
   );
