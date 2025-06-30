@@ -1,29 +1,64 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetMoviesQuery, useDeleteMovieMutation, useSubmitReviewMutation, useDeleteReviewMutation } from '../../redux/api/movies.js';
+import {
+  useGetMovieByIdQuery,
+  useDeleteMovieMutation,
+  useSubmitReviewMutation,
+  useDeleteReviewMutation,
+  useUpdateReviewMutation
+} from '../../redux/api/movies.js';
 import { useSelector } from 'react-redux';
+import { IoSend } from 'react-icons/io5';
+import toast from 'react-hot-toast';
 import './movieDetails.css';
-import { IoSend } from "react-icons/io5";
-import '../../Assest/placeholder.jpg'
 
 const MovieDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { userInfo: user } = useSelector((state) => state.auth);
 
-  const {
-    data: movies = [],
-    isLoading,
-    refetch
-  } = useGetMoviesQuery();
-
+  const { data: movie, isLoading, refetch } = useGetMovieByIdQuery(id);
   const [deleteMovie] = useDeleteMovieMutation();
   const [submitReview] = useSubmitReviewMutation();
   const [deleteReview] = useDeleteReviewMutation();
+  const [updateReview] = useUpdateReviewMutation();
 
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRating, setEditRating] = useState('');
+  const [editComment, setEditComment] = useState('');
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (movie?.reviews && user) {
+      const existing = movie.reviews.find(
+        (r) =>
+          (typeof r.user === 'string' && r.user === user._id) ||
+          (typeof r.user === 'object' && r.user._id === user._id)
+      );
+      if (existing) {
+        setEditRating(existing.rating);
+        setEditComment(existing.comment);
+      }
+    }
+  }, [movie, user]);
+
+  if (isLoading || !movie) return <p>Loading movie...</p>;
+
+  const userReview = movie.reviews.find(
+    (r) =>
+      (typeof r.user === 'string' && r.user === user?._id) ||
+      (typeof r.user === 'object' && r.user._id === user?._id)
+  );
+
+  const otherReviews = movie.reviews.filter(
+    (r) =>
+      !(
+        (typeof r.user === 'string' && r.user === user?._id) ||
+        (typeof r.user === 'object' && r.user._id === user?._id)
+      )
+  );
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -34,13 +69,6 @@ const MovieDetails = () => {
     }
   };
 
-  const movie = movies.find((m) => m._id === id);
-
-  if (!movie) return <p>Loading movie...</p>;
-
-  const userReview = movie.reviews.find((r) => r.user === user?._id);
-  const otherReviews = movie.reviews.filter((r) => r.user !== user?._id);
-
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this movie?')) {
       await deleteMovie(id);
@@ -50,31 +78,20 @@ const MovieDetails = () => {
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-
-    if (!user) {
-      alert('You must be logged in to submit a review.');
-      return;
-    }
+    if (!user) return alert('You must be logged in to submit a review.');
 
     try {
       await submitReview({
-        id: movie._id,
-        reviewData: {
-          user: user._id,
-          name: user.name || 'Anonymous',
-          image: user.image,
-          rating: Number(rating),
-          comment,
-        },
+        movieId: movie._id,
+        reviewData: { rating: Number(rating), comment },
       });
-
-      alert('Review submitted!');
+      toast.success('Review submitted!');
       setRating('');
       setComment('');
-      await refetch();
+      refetch();
     } catch (error) {
-      console.error(error);
-      alert('Failed to submit review.');
+      console.error('Submit review error:', error);
+      toast.error('Failed to submit review.');
     }
   };
 
@@ -82,25 +99,39 @@ const MovieDetails = () => {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      await deleteReview({ movieId: movie._id, reviewId });
-      alert('Review deleted!');
-      refetch(); // to refresh the reviews
+      await deleteReview({ id: movie._id, reviewId });
+      toast.success('Review deleted!');
+      refetch();
     } catch (err) {
-      console.error('Failed to delete review:', err);
-      alert('Error deleting review.');
+      console.error('Delete review error:', err);
+      toast.error('Error deleting review.');
+    }
+  };
+
+  const handleUpdateReview = async (e) => {
+    e.preventDefault();
+
+    try {
+      await updateReview({
+        movieId: movie._id,
+        reviewId: userReview._id,
+        reviewData: { rating: Number(editRating), comment: editComment },
+        token: user.token,
+      });
+      toast.success('Review updated!');
+      setIsEditing(false);
+      refetch();
+    } catch (err) {
+      console.error('Update review error:', err);
+      toast.error('Failed to update review.');
     }
   };
 
   return (
     <>
-      {/* Main Movie Details Section */}
       <div className="movie-details-container">
         <img
-          src={
-            movie.image?.startsWith('https') || movie.image?.startsWith('upload')
-              ? movie.image
-              : ``
-          }
+          src={movie.image?.startsWith('https') || movie.image?.startsWith('upload') ? movie.image : '/placeholder.jpg'}
           alt={movie.title}
           onError={(e) => (e.target.src = '/placeholder.jpg')}
           className="movie-details-poster"
@@ -115,12 +146,8 @@ const MovieDetails = () => {
           <p><strong>Genre:</strong> {typeof movie.genre === 'object' ? movie.genre.name : movie.genre}</p>
 
           <div className="movie-detail-actions">
-            <button onClick={() => navigate(`/movies/edit/${movie._id}`)} className="edit-btn">
-              ✏ Edit
-            </button>
-            <button onClick={handleDelete} className="delete-btn">
-              🗑 Delete
-            </button>
+            <button onClick={() => navigate(`/movies/edit/${movie._id}`)} className="edit-btn">✏ Edit</button>
+            <button onClick={handleDelete} className="delete-btn">🗑 Delete</button>
           </div>
         </div>
       </div>
@@ -128,34 +155,50 @@ const MovieDetails = () => {
       <div className="movie-reviews-section">
         <h3>Reviews</h3>
 
-        {/* Show user's own review if exists */}
         {userReview ? (
           <div className="highlighted-review">
             <div className="review-content">
               <div className="review-user">
-                {user.image ? (
-                  <img src={user.image} alt="avatar" className="avatar" />
+                {userReview.user?.image ? (
+                  <img src={userReview.user.image} alt="avatar" className="avatar" />
                 ) : (
                   <span className="user-icon">👤</span>
                 )}
-                <strong className="user-name">{user.name}</strong>
+                <strong className="user-name">{userReview.user?.name}</strong>
               </div>
-              <span>|</span>
-              <span>⭐ {userReview.rating}</span>
-              <span>{userReview.comment}</span>
+              {isEditing ? (
+                <form onSubmit={handleUpdateReview} className="review-edit-form">
+                  <select value={editRating} onChange={(e) => setEditRating(e.target.value)} required>
+                    <option value="">⭐ Rate</option>
+                    {[...Array(11).keys()].map((num) => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                  <textarea
+                    value={editComment}
+                    onChange={(e) => setEditComment(e.target.value)}
+                    required
+                    rows={1}
+                  />
+                  <button type="submit" className="send-btn">
+                    <IoSend size={18} />
+                  </button>
+                </form>
+              ) : (
+                <>
+                  <span>|</span>
+                  <span>⭐ {userReview.rating}</span>
+                  <span>{userReview.comment}</span>
+                </>
+              )}
             </div>
-            <span className="review-date">
-              {new Date(userReview.createdAt).toLocaleDateString()}
-            </span>
-            <button
-              className="delete-review-btn"
-              onClick={() => handleDeleteReview(userReview._id)}
-            >
-              🗑 Delete Review
-            </button>
+            <span className="review-date">{new Date(userReview.createdAt).toLocaleDateString()}</span>
+            <div className="review-actions">
+              <button onClick={() => setIsEditing(!isEditing)} className="edit-review-btn">✏ Edit</button>
+              <button onClick={() => handleDeleteReview(userReview._id)} className="delete-review-btn">🗑 Delete</button>
+            </div>
           </div>
         ) : (
-          // Inline review input
           <form onSubmit={handleReviewSubmit} className="review-input-inline">
             <select
               className="rating-select"
@@ -168,7 +211,6 @@ const MovieDetails = () => {
                 <option key={num} value={num}>{num}</option>
               ))}
             </select>
-
             <textarea
               value={comment}
               onChange={handleCommentChange}
@@ -183,18 +225,17 @@ const MovieDetails = () => {
           </form>
         )}
 
-        {/* Show other reviews */}
         {otherReviews.length > 0 ? (
           otherReviews.map((review) => (
             <div key={review._id} className="review-card">
               <div className="review-content">
                 <div className="review-user">
-                  {review.image ? (
-                    <img src={review.image} alt="avatar" className="avatar" />
+                  {review.user?.image ? (
+                    <img className="avatar" src={review.user.image} alt="avatar" />
                   ) : (
                     <span className="user-icon">👤</span>
                   )}
-                  <strong className="user-name">{review.name}</strong>
+                  <strong>{review.user?.name}</strong>
                 </div>
                 <span>|</span>
                 <span>⭐ {review.rating}</span>

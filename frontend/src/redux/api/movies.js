@@ -59,6 +59,15 @@ export const movieApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Movie'],
     }),
 
+    updateReview: builder.mutation({
+      query: ({ movieId, reviewId, reviewData, token }) => ({
+        url: `${MOVIE_URL}/${movieId}/reviews/${reviewId}`,
+        method: 'PUT',
+        body: reviewData,
+      }),
+      invalidatesTags: ['Movie'],
+    }),
+
     deleteReview: builder.mutation({
       query: ({ id, reviewId }) => ({
         url: `/movies/${id}/reviews/${reviewId}`,
@@ -76,5 +85,6 @@ export const {
   useUpdateMovieMutation,
   useDeleteMovieMutation,
   useSubmitReviewMutation,
+  useUpdateReviewMutation,
   useDeleteReviewMutation,
 } = movieApiSlice;

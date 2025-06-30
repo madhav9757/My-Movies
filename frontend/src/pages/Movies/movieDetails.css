@@ -221,6 +221,77 @@
   background: #dc2626;
 }
 
+.review-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.review-edit-form select,
+.review-edit-form textarea {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+.review-edit-form textarea {
+  flex: 1;
+  min-width: 200px;
+  max-width: 100%;
+  height: auto;
+  min-height: 40px;
+  line-height: 1.4;
+}
+
+.review-edit-form .send-btn {
+  background-color: #1e90ff;
+  border: none;
+  color: white;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-edit-form .send-btn:hover {
+  background-color: #1c7ed6;
+}
+
+.review-actions {
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-review-btn,
+.delete-review-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.4rem;
+  transition: background 0.2s ease;
+}
+
+.edit-review-btn:hover {
+  background: #e0f0ff;
+  color: #0077cc;
+}
+
+.delete-review-btn:hover {
+  background: #ffe0e0;
+  color: #d00000;
+}
+
 @media (max-width: 600px) {
   .rating-select{
     width : 20px

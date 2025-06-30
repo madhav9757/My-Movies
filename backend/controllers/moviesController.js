@@ -5,7 +5,9 @@ import Movie from '../models/Movies.js';
 // @route   GET /api/movies
 // @access  Public
 const getMovies = asyncHandler(async (req, res) => {
-  const movies = await Movie.find().populate('genre', 'name slug');
+  const movies = await Movie.find()
+    .populate('genre', 'name slug')
+    .populate('reviews.user', 'name image');
   res.status(200).json(movies);
 });
 
@@ -13,7 +15,10 @@ const getMovies = asyncHandler(async (req, res) => {
 // @route   GET /api/movies/:id
 // @access  Public
 const getMovieById = asyncHandler(async (req, res) => {
-  const movie = await Movie.findById(req.params.id).populate('genre', 'name slug');
+  const movie = await Movie.findById(req.params.id)
+    .populate('genre', 'name slug')
+    .populate('reviews.user', 'name image');
+
   if (movie) {
     res.status(200).json(movie);
   } else {
@@ -116,7 +121,6 @@ const movieReviews = asyncHandler(async (req, res) => {
 
   const review = {
     user: req.user._id,
-    name: req.user.name,
     rating: Number(rating),
     comment,
   };
@@ -124,10 +128,45 @@ const movieReviews = asyncHandler(async (req, res) => {
   movie.reviews.push(review);
   movie.numReviews = movie.reviews.length;
   movie.averageRating =
-    movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
+    movie.reviews.length > 0
+      ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
+      : 0;
 
   await movie.save();
   res.status(201).json({ message: 'Review added successfully' });
+});
+
+// @desc    Update a review
+// @route   PUT /api/movies/:movieId/reviews/:reviewId
+// @access  Private
+const updateReview = asyncHandler(async (req, res) => {
+  const { movieId, reviewId } = req.params;
+
+  const movie = await Movie.findById(movieId);
+  const review = movie.reviews.id(reviewId); // <-- Needs exact _id match
+
+  if (!review) {
+    res.status(404);
+    throw new Error('Review not found');
+  }
+
+  // Only allow review owner to update
+  if (review.user.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('Not authorized to update this review');
+  }
+
+  review.rating = rating ?? review.rating;
+  review.comment = comment ?? review.comment;
+  review.image = req.user.image; // keep existing image if exists
+
+  // Recalculate average rating
+  movie.averageRating =
+    movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length;
+
+  await movie.save();
+
+  res.status(200).json({ message: 'Review updated successfully' });
 });
 
 // @desc    Delete a review
@@ -173,5 +212,6 @@ export {
   updateMovie,
   deleteMovie,
   movieReviews,
+  updateReview,
   deleteReview,
 };

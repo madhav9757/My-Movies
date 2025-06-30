@@ -6,6 +6,7 @@ import {
   updateMovie,
   deleteMovie,
   movieReviews,
+  updateReview,
   deleteReview
 } from '../controllers/moviesController.js';
 
@@ -21,6 +22,8 @@ router.get('/:id', getMovieById);
 // Restricted (requires authentication)
 router.post('/:id/reviews', protect, checkId, movieReviews);
 router.delete('/:id/reviews/:reviewId', protect, checkId, deleteReview);
+router.put('/:movieId/reviews/:reviewId', protect, updateReview);
+
 
 // Protected (admin only)
 router.post('/', protect, createMovie);
