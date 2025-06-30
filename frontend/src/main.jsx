@@ -12,7 +12,7 @@ import EditProfile from './pages/user/editProfile.jsx';
 import store from './redux/store.js';
 import './index.css';
 
-import AdminRoute from './pages/admin/adminRoute.jsx';
+import UserProfile from './pages/user/userProfile.jsx';
 import GenreList from './pages/Genre/genres.jsx';
 import GenreCreate from './components/genreForm.jsx';
 import Movies from './pages/Movies/movies.jsx';
@@ -29,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/edit" element={<EditProfile />} />
+      <Route path="/profile/:userId" element={<UserProfile />} />
 
       <Route>
         <Route path="/genres" element={<GenreList />} />

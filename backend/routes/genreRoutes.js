@@ -16,8 +16,8 @@ router.get('/', getGenres);
 router.get('/:id', getGenreById);
 
 // Protected Admin Routes
-router.post('/', protect, admin, createGenre);
-router.put('/:id', protect, admin, updateGenre);
-router.delete('/:id', protect, admin, deleteGenre);
+router.post('/', protect, createGenre);
+router.put('/:id', protect, updateGenre);
+router.delete('/:id', protect, deleteGenre);
 
 export default router;

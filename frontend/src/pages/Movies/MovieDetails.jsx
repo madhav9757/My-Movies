@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   useGetMovieByIdQuery,
   useDeleteMovieMutation,
@@ -60,6 +61,9 @@ const MovieDetails = () => {
       )
   );
 
+  // console.log("userReview:", userReview);
+  // console.log('otherReviews:', otherReviews);
+
   const handleCommentChange = (e) => {
     setComment(e.target.value);
     const textarea = textareaRef.current;
@@ -81,8 +85,12 @@ const MovieDetails = () => {
     if (!user) return alert('You must be logged in to submit a review.');
 
     try {
+      if (!movie?._id) {
+        toast.error("Movie ID is missing!");
+        return;
+      }
       await submitReview({
-        movieId: movie._id,
+        id: movie._id,
         reviewData: { rating: Number(rating), comment },
       });
       toast.success('Review submitted!');
@@ -158,7 +166,7 @@ const MovieDetails = () => {
         {userReview ? (
           <div className="highlighted-review">
             <div className="review-content">
-              <div className="review-user">
+              <div className="review-user" onClick={()=>navigate(`/profile/${userReview.user._id}`)}>
                 {userReview.user?.image ? (
                   <img src={userReview.user.image} alt="avatar" className="avatar" />
                 ) : (
@@ -229,13 +237,13 @@ const MovieDetails = () => {
           otherReviews.map((review) => (
             <div key={review._id} className="review-card">
               <div className="review-content">
-                <div className="review-user">
-                  {review.user?.image ? (
-                    <img className="avatar" src={review.user.image} alt="avatar" />
-                  ) : (
-                    <span className="user-icon">👤</span>
-                  )}
-                  <strong>{review.user?.name}</strong>
+                <div className="review-user" onClick={()=>navigate(`/profile/${review.user._id}`)}>
+                    {review.user?.image ? (
+                      <img className="avatar" src={review.user.image} alt="avatar" />
+                    ) : (
+                      <span className="user-icon">👤</span>
+                    )}
+                    <strong>{review.user?.name}</strong>
                 </div>
                 <span>|</span>
                 <span>⭐ {review.rating}</span>

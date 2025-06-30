@@ -3,6 +3,10 @@ import { USERS_URL } from '../constants';
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUserProfile: builder.query({
+      query: (userId) => `/users/${userId}`, // Backend endpoint for user profile
+      providesTags: (result, error, userId) => [{ type: 'User', id: userId }],
+    }),
     // In apiSlice or injected slice
     getProfile: builder.query({
       query: () => `${USERS_URL}/profile`,
@@ -20,4 +24,4 @@ export const userApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useUpdateProfileMutation, useGetProfileQuery } = userApiSlice;
+export const { useUpdateProfileMutation, useGetProfileQuery, useGetUserProfileQuery } = userApiSlice;

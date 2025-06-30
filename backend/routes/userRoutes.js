@@ -60,7 +60,7 @@ router.route('/')
     .get(protect, admin, getUsers); 
 
 router.route('/:id')
-    .get(protect, admin, getUserById) 
+    .get(protect, getUserById) 
     .delete(protect, admin, deleteUser) 
     .put(protect, admin, updateUser); 
 

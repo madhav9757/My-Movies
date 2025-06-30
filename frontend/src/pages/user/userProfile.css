@@ -1,0 +1,148 @@
+.user-profile-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #2c2c2c; /* Dark background */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  color: #e0e0e0; /* Light text */
+}
+
+.user-profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #444;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #61dafb; /* Accent color */
+  margin-bottom: 15px;
+}
+
+.profile-user-icon {
+  font-size: 80px;
+  display: block;
+  margin: 0 auto 15px;
+  color: #61dafb;
+}
+
+.user-profile-header h2 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.user-profile-header p {
+  font-size: 1.1em;
+  color: #bbb;
+}
+
+.user-reviews-section {
+  margin-top: 30px;
+}
+
+.user-reviews-section h3 {
+  font-size: 1.8em;
+  margin-bottom: 25px;
+  color: #fff;
+  text-align: center;
+}
+
+.user-reviews-list {
+  display: grid;
+  gap: 20px;
+}
+
+.user-review-card {
+  background-color: #3a3a3a; /* Slightly lighter dark */
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start; /* Align movie info to top */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+.user-review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.user-review-movie-info {
+  flex-shrink: 0; /* Prevent shrinking */
+  margin-right: 20px;
+  text-align: center;
+}
+
+.user-review-movie-info a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.user-review-movie-poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.user-review-movie-info h4 {
+  font-size: 1.1em;
+  color: #61dafb; /* Accent color for movie title */
+  margin: 0;
+}
+
+.user-review-details {
+  flex-grow: 1; /* Take up remaining space */
+}
+
+.user-review-details p {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.user-review-date {
+  font-size: 0.9em;
+  color: #aaa;
+  display: block;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.loading-message,
+.error-message,
+.not-found-message {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2em;
+  color: #aaa;
+}
+
+.error-message {
+  color: #ff6b6b; /* Red for errors */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-profile-container {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  .user-review-card {
+    flex-direction: column; /* Stack movie info and review details on small screens */
+    align-items: center;
+    text-align: center;
+  }
+
+  .user-review-movie-info {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+}

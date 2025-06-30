@@ -7,6 +7,11 @@ const reviewSchema = mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  movie: { 
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Movie',
+  },
   rating: { type: Number, required: true },
   comment: { type: String, required: true },
 }, { timestamps: true });

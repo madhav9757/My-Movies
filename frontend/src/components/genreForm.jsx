@@ -16,7 +16,7 @@ const GenreCreate = () => {
     e.preventDefault();
     try {
       await createGenre(formData).unwrap();
-      navigate('/admin/genres');
+      navigate('/genres');
     } catch (err) {
       console.error('Genre creation failed', err);
     }

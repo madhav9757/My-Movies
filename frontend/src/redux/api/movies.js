@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import { MOVIE_URL, UPLOAD_URL, BASE_URL } from "../constants";
+import { MOVIE_URL } from "../constants";
 import api from "./axiosInstance";
 
 export const movieApiSlice = apiSlice.injectEndpoints({
