@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGetMoviesQuery, useDeleteMovieMutation, useSubmitReviewMutation, useDeleteReviewMutation } from '../../redux/api/movies.js';
 import { useSelector } from 'react-redux';
 import './movieDetails.css';
+import { IoSend } from "react-icons/io5";
 import '../../Assest/placeholder.jpg'
 
 const MovieDetails = () => {
@@ -22,6 +23,16 @@ const MovieDetails = () => {
 
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
+  const textareaRef = useRef(null);
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
 
   const movie = movies.find((m) => m._id === id);
 
@@ -158,14 +169,17 @@ const MovieDetails = () => {
               ))}
             </select>
 
-            <input
-              type="text"
+            <textarea
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={handleCommentChange}
               placeholder="Write a review..."
+              rows={1}
               required
+              ref={textareaRef}
             />
-            <button type="submit" className="send-btn" disabled={!movie}>➤</button>
+            <button type="submit" className="send-btn" disabled={!movie}>
+              <IoSend size={18} />
+            </button>
           </form>
         )}
 
