@@ -1,91 +1,185 @@
+/* --- GenreList Component Styles (Enhanced & Responsive) --- */
+
+/* Define CSS Variables for consistency */
+:root {
+  --primary-blue: #4f46e5;
+  --dark-blue: #1e3a8a;
+  --light-gray-bg: #f3f4f6;
+  --medium-gray-text: #6b7280;
+  --border-color: #d1d5db;
+  --card-bg-hover: #e0e7ff;
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --red-alert: #dc2626;
+  --light-red-bg: #fee2e2;
+}
+
 .genre-list-grid-container {
-  padding: 2rem;
+  padding: 2.5rem 2rem;
+  /* More generous padding by default */
   max-width: 1200px;
   margin: auto;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  box-sizing: border-box;
+  /* Include padding in width */
 }
 
 .genre-list-grid-container h2 {
-  font-size: 1.8rem;
-  color: #4f46e5;
+  font-size: 2.2rem;
+  /* Larger, more prominent heading */
+  color: var(--dark-blue);
+  /* Deeper blue for headings */
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  /* More space below heading */
+  font-weight: 700;
 }
 
 .genre-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
+  /* Consistent spacing */
   flex-wrap: wrap;
+  /* Allow wrapping on smaller screens */
+  gap: 1rem;
+  /* Space between items when wrapped */
 }
 
 .add-genre-btn {
-  background-color: #2563eb;
+  background-color: var(--primary-blue);
   color: white;
-  padding: 0.6rem 1.2rem;
+  padding: 0.8rem 1.5rem;
+  /* More padding for a bolder button */
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  /* More rounded */
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  /* Slightly larger font */
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+  /* Soft shadow */
+  display: flex;
+  /* For icon if added */
+  align-items: center;
+  gap: 0.5rem;
+  /* Removed width: 100% from here */
 }
 
 .add-genre-btn:hover {
-  background-color: #1e40af;
+  background-color: #4338ca;
+  /* Darker blue on hover */
+  transform: translateY(-2px);
+  /* Slight lift effect */
+  box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+}
+
+.add-genre-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2);
 }
 
 .genre-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  /* Responsive grid with minmax for better scaling */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  /* Larger min-width for cards */
   gap: 1.5rem;
+  /* Consistent gap */
 }
 
 .genre-card {
-  background-color: #f3f4f6;
-  padding: 1rem;
-  border-radius: 0.75rem;
+  background-color: white;
+  /* White background for cards */
+  padding: 1.5rem;
+  /* More internal padding */
+  border-radius: 1rem;
+  /* More rounded corners */
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 6px 18px var(--shadow-light);
+  /* More pronounced shadow */
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e0e0e0;
+  /* Subtle border */
+  display: flex;
+  /* Flexbox for internal layout */
+  flex-direction: column;
+  justify-content: space-between;
+  /* Push actions to bottom */
+  height: 100%;
+  /* Ensure equal height in grid rows */
 }
 
 .genre-card:hover {
-  background-color: #e0e7ff;
-  transform: translateY(-4px);
+  background-color: var(--card-bg-hover);
+  transform: translateY(-5px);
+  /* More noticeable lift */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  /* Stronger shadow on hover */
 }
 
 .genre-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.35rem;
+  /* Larger font for genre name */
+  font-weight: 600;
+  color: #333;
+  /* Darker text */
+  margin-bottom: 0.75rem;
+  /* More space */
 }
 
 .genre-card p {
-  font-size: 0.9rem;
-  color: #6b7280;
+  font-size: 0.95rem;
+  /* Slightly larger description */
+  color: var(--medium-gray-text);
+  line-height: 1.5;
+  /* Better readability */
+  flex-grow: 1;
+  /* Allow description to take available space */
+  margin-bottom: 1rem;
+  /* Space before actions */
 }
 
 .genre-card-actions {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  /* Adjust margin if needed due to flex-grow */
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  /* More space between buttons */
 }
 
 .edit-btn,
 .delete-btn {
   border: none;
   background: none;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  /* Larger icons */
   cursor: pointer;
+  color: var(--medium-gray-text);
+  /* Default icon color */
+  transition: color 0.2s ease, transform 0.1s ease;
+  padding: 0.5rem;
+  /* Make clickable area larger */
+  border-radius: 50%;
+  /* For a circular hover effect */
 }
 
 .edit-btn:hover {
   color: #2563eb;
+  /* Blue on hover */
+  transform: scale(1.1);
+  background-color: rgba(37, 99, 235, 0.1);
 }
 
 .delete-btn:hover {
-  color: #dc2626;
+  color: var(--red-alert);
+  /* Red on hover */
+  transform: scale(1.1);
+  background-color: rgba(220, 38, 38, 0.1);
 }
 
 /* Modal Styles */
@@ -95,60 +189,379 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
+  /* Darker overlay */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
+  /* Subtle blur effect */
+  animation: fadeIn 0.3s ease-out;
+  /* Fade in animation */
 }
 
 .modal {
   background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  width: 400px;
+  padding: 2.5rem;
+  /* More internal padding */
+  border-radius: 1.25rem;
+  /* More rounded */
+  width: 450px;
+  /* Slightly wider modal */
   max-width: 90%;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  /* Stronger shadow */
+  animation: slideInFromTop 0.3s ease-out forwards;
+  /* Slide in animation */
+  box-sizing: border-box;
+  /* Include padding in width */
 }
 
 .modal h3 {
-  margin-bottom: 1rem;
-  color: #4f46e5;
+  margin-bottom: 1.5rem;
+  /* More space below heading */
+  color: var(--primary-blue);
   text-align: center;
+  font-size: 1.8rem;
+  /* Larger heading */
+  font-weight: 700;
+}
+
+.modal label {
+  /* Added label styling for accessibility and clarity */
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
 }
 
 .modal input,
 .modal textarea {
   width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 0.85rem;
+  /* More padding for inputs */
+  margin-bottom: 1.2rem;
+  /* More space between inputs */
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  /* More rounded */
   font-size: 1rem;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  /* Include padding in width */
+}
+
+.modal input:focus,
+.modal textarea:focus {
+  border-color: var(--primary-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.modal textarea {
+  resize: vertical;
+  /* Allow vertical resizing */
+  min-height: 100px;
+  /* Minimum height for textarea */
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  /* More space between buttons */
+  margin-top: 1.5rem;
+  /* Space from last input */
 }
 
 .modal-actions button {
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  padding: 0.7rem 1.2rem;
+  /* More padding */
+  border-radius: 0.6rem;
+  /* More rounded */
   border: none;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
 
 .modal-actions button[type='submit'] {
-  background-color: #4f46e5;
+  background-color: var(--primary-blue);
   color: white;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+}
+
+.modal-actions button[type='submit']:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
 }
 
 .cancel-btn {
   background-color: #e5e7eb;
-}
-.modal-actions .cancel-btn {
   color: #374151;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cancel-btn:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/* --- Responsive Adjustments --- */
+
+/* Tablets and smaller desktops */
+@media (max-width: 992px) {
+  .genre-list-grid-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .genre-list-grid-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .add-genre-btn {
+    padding: 0.7rem 1.3rem;
+    font-size: 1rem;
+    /* Kept normal width, no width: 100% */
+  }
+
+  .genre-grid {
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    /* Adjust min-width */
+  }
+
+  .genre-card {
+    padding: 1.2rem;
+    border-radius: 0.9rem;
+  }
+
+  .genre-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .genre-card p {
+    font-size: 0.9rem;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    font-size: 1.3rem;
+  }
+
+  .modal {
+    padding: 2rem;
+    width: 400px;
+    border-radius: 1.1rem;
+  }
+
+  .modal h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .modal input,
+  .modal textarea {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.6rem;
+  }
+
+  .modal-actions button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile phones (portrait) */
+@media (max-width: 768px) {
+  .genre-list-grid-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .genre-list-grid-container h2 {
+    display: none;
+    /* Hide the title on mobile */
+  }
+
+  .genre-list-header {
+    /* No change to flex-direction column here, as you wanted the button at normal width */
+    flex-direction: row;
+    /* Keep it row direction */
+    justify-content: center;
+    /* Center the button if it's the only item */
+    gap: 1rem;
+  }
+
+  .add-genre-btn {
+    /* No width: 100% here, keep normal width */
+    padding: 0.75rem 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .genre-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    /* Smaller min-width for cards */
+    gap: 1rem;
+  }
+
+  .genre-card {
+    padding: 1rem;
+    border-radius: 0.8rem;
+  }
+
+  .genre-card h3 {
+    font-size: 1.15rem;
+  }
+
+  .genre-card p {
+    font-size: 0.85rem;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    font-size: 1.2rem;
+  }
+
+  .modal {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+
+  .modal h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal label {
+    font-size: 0.9rem;
+  }
+
+  .modal input,
+  .modal textarea {
+    padding: 0.65rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+  }
+
+  .modal textarea {
+    min-height: 80px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    /* Stack modal buttons */
+    gap: 0.6rem;
+  }
+
+  .modal-actions button {
+    width: 100%;
+    /* Full width buttons */
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Very Small Mobile Phones */
+@media (max-width: 400px) {
+  .genre-list-grid-container {
+    padding: 1rem 0.5rem;
+  }
+
+  /* h2 is already hidden from 768px down */
+  .add-genre-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 0.6rem;
+  }
+
+  .genre-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    /* Even smaller cards */
+    gap: 0.8rem;
+  }
+
+  .genre-card {
+    padding: 0.8rem;
+    border-radius: 0.7rem;
+  }
+
+  .genre-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .genre-card p {
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    font-size: 1.1rem;
+    padding: 0.4rem;
+  }
+
+  .modal {
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+  }
+
+  .modal h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .modal label {
+    font-size: 0.85rem;
+  }
+
+  .modal input,
+  .modal textarea {
+    padding: 0.6rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.9rem;
+    border-radius: 0.4rem;
+  }
+
+  .modal textarea {
+    min-height: 70px;
+  }
+
+  .modal-actions button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+  }
 }
