@@ -1,11 +1,56 @@
+/* --- edit-profile.css - Perfect Responsive Enhancement --- */
+
+/* Ensure global box-sizing for predictable layout - CRITICAL */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Define consistent CSS variables */
+:root {
+  --primary-purple: #4f46e5;
+  /* Your main button/accent color */
+  --light-purple: #6366f1;
+  /* Lighter shade for hover/focus */
+  --dark-blue-text: #1e3a8a;
+  /* Heading color */
+  --light-bg-color: #f3f4f6;
+  /* Page background */
+  --input-bg-color: #f9fafb;
+  /* Input field background */
+  --input-border-color: #d1d5db;
+  --text-dark: #111827;
+  --text-muted: #6b7280;
+  --shadow-base: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --header-height: 65px;
+  /* Assuming your header height */
+  --footer-height: 60px;
+  /* Assuming your footer height */
+}
+
+
 /* Page Container */
 .edit-profile-container {
   display: flex;
   justify-content: center;
-  align-items: center;  /* Vertical centering */
-  padding: 1rem 1rem;
-  background: #f3f4f6;
-  min-height: 100%;
+  align-items: flex-start;
+  /* Changed to flex-start for better vertical alignment on tall forms */
+  padding: 2.5rem 2rem;
+  /* More generous default padding for larger screens */
+  background: var(--light-bg-color);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  /* Ensure it fills screen height */
+  box-sizing: border-box;
+  /* Include padding in height */
+  overflow-x: hidden;
+  /* Prevent horizontal scroll for the entire page */
+  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
 /* Main Form */
@@ -13,30 +58,53 @@
   width: 100%;
   max-width: 900px;
   background: white;
-  padding: 2.5rem 2rem;
+  padding: 2.5rem;
+  /* Consistent padding */
   border-radius: 1.5rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 30px var(--shadow-base);
+  /* Slightly softer shadow */
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  /* Consistent gap between sections */
   animation: fadeInUp 0.6s ease;
+  box-sizing: border-box;
+  /* Include padding in width */
 }
 
 /* Title */
 .edit-profile-form h2 {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--dark-blue-text);
   text-align: center;
   margin-bottom: 1rem;
+  display: flex;
+  /* For icon alignment if using */
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
 }
+
+/* If your h2 has an icon, style it here */
+.edit-profile-form h2 .icon {
+  /* Assuming an icon class if used inside h2 */
+  font-size: 2.5rem;
+  color: var(--primary-purple);
+}
+
 
 /* Grid Layout */
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* Two columns for desktop */
   gap: 2rem;
+  /* Consistent gap between grid items */
   align-items: stretch;
+  /* Ensure columns stretch to equal height */
+  min-width: 0;
+  /* Allow grid to shrink */
 }
 
 /* Equal columns */
@@ -44,61 +112,119 @@
 .profile-right {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1.5rem;
+  /* Gap between form fields within columns */
+  min-width: 0;
+  /* Allow columns to shrink */
 }
 
 /* Input wrapper */
 .input-icon-wrapper {
   display: flex;
   align-items: center;
-  padding: 1rem;
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
+  padding: 1rem 1.2rem;
+  /* More padding for a polished look */
+  background: var(--input-bg-color);
+  border: 1px solid var(--input-border-color);
   border-radius: 0.75rem;
-  transition: border-color 0.2s;
-  margin-bottom: 1rem;
+  /* More rounded corners */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  /* Enhanced transition */
+  margin-bottom: 0;
+  /* Remove fixed margin-bottom here, use parent gap */
+  width: 100%;
+  /* Ensure it fills its space */
+  box-sizing: border-box;
+  /* Include padding in width */
+  min-width: 0;
+  /* Allow wrapper to shrink */
 }
 
-.input-icon-wrapper:hover {
-  border-color: #6366f1;
+.input-icon-wrapper:focus-within {
+  border-color: var(--light-purple);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  /* Stronger focus shadow */
+  background-color: #ffffff;
+  /* White background on focus */
 }
 
 .input-icon-wrapper input {
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  /* Slightly larger font */
   outline: none;
-  padding: 0.5rem 0.75rem;
-  color: #111827;
+  padding: 0;
+  /* Reset internal input padding */
+  color: var(--text-dark);
+  min-width: 0;
+  /* Allow input to shrink */
+  overflow: hidden;
+  /* Prevent text overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Keep text on one line */
 }
 
+.input-icon-wrapper input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+
 .input-icon {
-  font-size: 1.3rem;
-  color: #6366f1;
+  font-size: 1.4rem;
+  /* Slightly larger icon */
+  color: var(--light-purple);
+  margin-right: 0.8rem;
+  /* More space for icon */
+  flex-shrink: 0;
+  /* Prevent icon from shrinking */
 }
 
 /* Submit Button */
 .save-changes-button {
-  margin-top: 2rem;
-  padding: 1.1rem;
-  background: #4f46e5;
+  margin-top: 1rem;
+  /* Adjust margin top to integrate better with gap */
+  padding: 1.2rem;
+  /* More padding */
+  background: var(--primary-purple);
   color: white;
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  /* Slightly larger font */
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 0.8rem;
+  /* More rounded */
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  /* Added box-shadow transition */
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+  /* Soft initial shadow */
+  width: 100%;
+  /* Ensure full width when stacked on mobile */
+  box-sizing: border-box;
 }
 
 .save-changes-button:hover {
   background: #4338ca;
-  transform: scale(1.03);
+  /* Darker on hover */
+  transform: translateY(-3px);
+  /* More pronounced lift */
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.5);
+  /* Stronger hover shadow */
 }
+
+.save-changes-button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+}
+
 /* Messages */
 .success-msg,
 .error-msg {
@@ -106,118 +232,25 @@
   font-weight: 500;
   font-size: 1rem;
   margin-top: -1rem;
+  /* Adjust to pull closer if needed */
+  margin-bottom: 1rem;
+  /* Add some space below */
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 .success-msg {
-  color: #22c55e;
+  color: #16a34a;
+  /* Darker green for success */
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
 }
 
 .error-msg {
-  color: #ef4444;
-}
-
-/* ImageInput component outline */
-.image-input-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem 1.2rem;
-  background: linear-gradient(to bottom right, #f5f7fa, #eef2f7);
-  border-radius: 1rem;
-  border: 2px solid #c7d2fe;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  height: 100%;
-  position: relative;
-}
-
-.image-input-wrapper:hover {
-  border-color: #6366f1;
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
-}
-
-/* Header title bar */
-.image-input-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #4f46e5;
-  margin-bottom: 0.5rem;
-}
-
-/* Control row (file + text + clear) */
-.image-input-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-/* Folder button */
-.file-btn {
-  font-size: 1.2rem;
-  background: #ede9fe;
-  border: none;
-  color: #4f46e5;
-  padding: 0.6rem 0.8rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.file-btn:hover {
-  background: #c7d2fe;
-}
-
-/* Text input (URL field) */
-.image-url-input {
-  flex: 1;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.95rem;
-  background: white;
-  color: #111827;
-  transition: border-color 0.3s ease;
-}
-
-.image-url-input:focus {
-  border-color: #6366f1;
-  outline: none;
-}
-
-/* Clear button */
-.clear-image-button {
-  background: #fee2e2;
-  color: #b91c1c;
-  font-weight: bold;
-  border: none;
-  padding: 0.5rem 0.7rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.clear-image-button:hover {
-  background: #fca5a5;
-}
-
-/* Image preview with modern feel */
-.image-preview {
-  width: 100%;
-  max-height: 280px;
-  object-fit: cover;
-  border-radius: 0.75rem;
-  border: 1px solid #d1d5db;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.image-preview:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+  color: #dc2626;
+  /* Darker red for error */
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
 }
 
 /* Fade animation */
@@ -226,30 +259,335 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Responsive (Mobile) */
+/* --- Responsive Adjustments (Enhanced) --- */
+
+/* Adjust overall padding for tablets/smaller desktops */
+@media (max-width: 992px) {
+  .edit-profile-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .edit-profile-form {
+    padding: 2rem;
+    gap: 1.8rem;
+  }
+
+  .edit-profile-form h2 {
+    font-size: 2rem;
+  }
+
+  .profile-grid {
+    gap: 1.5rem;
+  }
+
+  .profile-left,
+  .profile-right {
+    gap: 1.2rem;
+  }
+
+  .input-icon-wrapper {
+    padding: 0.8rem 1rem;
+  }
+
+  .input-icon-wrapper input {
+    font-size: 1rem;
+  }
+
+  .input-icon {
+    font-size: 1.3rem;
+    margin-right: 0.7rem;
+  }
+
+  .save-changes-button {
+    padding: 1.1rem;
+    font-size: 1.05rem;
+  }
+
+  .image-input-wrapper {
+    padding: 0.8rem 1rem;
+    gap: 0.6rem;
+  }
+
+  .image-input-header {
+    font-size: 1rem;
+  }
+
+  .file-btn {
+    font-size: 1.2rem;
+    padding: 0.5rem 0.7rem;
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .image-url-input {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  .clear-image-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .image-preview {
+    max-height: 220px;
+  }
+}
+
+
+/* Tablets and Mobile Phones - Collapse grid */
 @media (max-width: 768px) {
   .profile-grid {
     grid-template-columns: 1fr;
+    /* CRITICAL: Stack columns vertically */
+    gap: 1.5rem;
+    /* Gap between the stacked sections (left & right) */
+  }
+
+  .edit-profile-container {
+    padding: 1.8rem 1.2rem;
+    /* Tighter padding for tablet/mobile */
+  }
+
+  .edit-profile-form {
+    padding: 1.8rem;
+    gap: 1.5rem;
+  }
+
+  .edit-profile-form h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .profile-left,
+  .profile-right {
+    gap: 1.2rem;
+    /* Gap between inputs within the now single column */
   }
 
   .save-changes-button {
     align-self: stretch;
+    /* Ensure it stretches full width */
     margin-top: 1.5rem;
+    /* Consistent margin */
+  }
+
+  .input-icon-wrapper {
+    padding: 0.75rem 1rem;
+    border-radius: 0.6rem;
+  }
+
+  .input-icon-wrapper input {
+    font-size: 0.95rem;
+  }
+
+  .input-icon {
+    font-size: 1.2rem;
+    margin-right: 0.6rem;
+  }
+
+  .image-input-wrapper {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+    border-radius: 0.8rem;
+  }
+
+  .image-input-header {
+    font-size: 0.95rem;
+    gap: 0.4rem;
+  }
+
+  .file-btn {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.6rem;
+    min-width: 38px;
+    height: 38px;
+  }
+
+  .image-url-input {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .clear-image-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .image-preview {
+    max-height: 200px;
+    /* Reduced for mobile */
   }
 }
-.success-banner {
-  background-color: #4caf50;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  margin-top: 1rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  text-align: center;
+
+/* Smaller Mobile Phones */
+@media (max-width: 500px) {
+  .edit-profile-container {
+    padding: 1.5rem 0.8rem;
+  }
+
+  .edit-profile-form {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    gap: 1.2rem;
+  }
+
+  .edit-profile-form h2 {
+    font-size: 1.6rem;
+    gap: 0.6rem;
+  }
+
+  .profile-grid {
+    gap: 1.2rem;
+  }
+
+  .profile-left,
+  .profile-right {
+    gap: 1rem;
+  }
+
+  .input-icon-wrapper {
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.6rem;
+  }
+
+  .input-icon-wrapper input {
+    font-size: 0.9rem;
+  }
+
+  .input-icon {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+  }
+
+  .save-changes-button {
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 0.7rem;
+    gap: 0.6rem;
+  }
+
+  .image-input-wrapper {
+    padding: 0.6rem 0.8rem;
+    gap: 0.4rem;
+    border-radius: 0.75rem;
+  }
+
+  .image-input-header {
+    font-size: 0.9rem;
+    gap: 0.3rem;
+  }
+
+  .file-btn {
+    font-size: 1rem;
+    padding: 0.3rem 0.5rem;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .image-url-input {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .clear-image-button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .image-preview {
+    max-height: 180px;
+  }
+
+  .success-msg,
+  .error-msg {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
 }
 
+/* Very Small Mobile Phones (e.g., iPhone SE in portrait) */
+@media (max-width: 360px) {
+  .edit-profile-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .edit-profile-form {
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    gap: 1rem;
+  }
+
+  .edit-profile-form h2 {
+    font-size: 1.4rem;
+    gap: 0.5rem;
+  }
+
+  .profile-grid {
+    gap: 1rem;
+  }
+
+  .profile-left,
+  .profile-right {
+    gap: 0.8rem;
+  }
+
+  .input-icon-wrapper {
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+  }
+
+  .input-icon-wrapper input {
+    font-size: 0.85rem;
+  }
+
+  .input-icon {
+    font-size: 1rem;
+    margin-right: 0.4rem;
+  }
+
+  .save-changes-button {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+    border-radius: 0.6rem;
+  }
+
+  .image-input-wrapper {
+    padding: 0.5rem 0.7rem;
+    gap: 0.3rem;
+    border-radius: 0.6rem;
+  }
+
+  .image-input-header {
+    font-size: 0.85rem;
+    gap: 0.2rem;
+  }
+
+  .file-btn {
+    font-size: 0.9rem;
+    padding: 0.2rem 0.4rem;
+    min-width: 28px;
+    height: 28px;
+  }
+
+  .image-url-input {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .clear-image-button {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .image-preview {
+    max-height: 150px;
+  }
+}
