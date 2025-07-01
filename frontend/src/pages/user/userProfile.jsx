@@ -90,7 +90,7 @@ const UserProfile = () => {
                         }}
                         style={{ cursor: 'pointer' }}
                       />
-                      <h4>{review.movie.title}</h4>
+                      <h4 className='user-review-movie-title'>{review.movie.title}</h4>
                     </Link>
                   </div>
                   <div className="user-review-details">

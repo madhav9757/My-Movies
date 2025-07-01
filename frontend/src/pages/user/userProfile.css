@@ -1,18 +1,3 @@
-/* --- Global Styles (No change here - still affects entire app) --- */
-body {
-  background-color: #f5f7fa;
-  font-family: 'Inter', sans-serif;
-  color: #1a1a1a;
-  margin: 0;
-  padding: 0;
-  line-height: 1.5;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 /* --- Profile Container --- */
 .user-profile-container {
   max-width: 800px;
@@ -94,130 +79,148 @@ body {
 .user-reviews-list {
   display: flex;
   flex-direction: column;
+  /* Stacks review cards vertically */
   gap: 1.2rem;
 }
 
-/* --- Review Card --- */
+/* --- Review Card - Layout to match image_91f07b.png --- */
 .user-review-card {
   background-color: #fff;
   display: flex;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  padding: 1rem 1.2rem;
-  gap: 1rem;
+  /* Main flex container for poster and content */
+  flex-direction: row;
+  /* Poster on left, content on right */
+  border-radius: 10px;
+  /* Matched image */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  /* Adjusted shadow to match image */
+  padding: 1.2rem;
+  /* Adjusted padding to match image */
+  gap: 1.5rem;
+  /* Space between poster and review content */
   align-items: flex-start;
-  border: 1px solid #e0e0e0;
+  /* Aligns content from the top */
+  border: none;
+  /* No border visible in image */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Removed ::before and nth-child(even) as not in image_91f07b.png */
 }
 
 .user-review-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-  background-color: #f9fbfe;
-  border-color: #cce4ff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-.user-review-card:nth-child(even) {
-  background-color: #f8fbff;
-}
-
-.user-review-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 4px;
-  width: 100%;
-  background: linear-gradient(to right, #0077ff, #00c6ff);
-}
-
-/* --- Movie Info (Poster & Title) - MODIFIED HERE --- */
-.user-review-movie-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.8rem;
+/* --- Movie Poster Container (Left Side of Review Card) --- */
+/* This now only holds the poster, as the title moves into the review details */
+.user-review-movie-poster-wrapper {
+  /* Renamed for clarity */
   flex-shrink: 0;
-  width: auto;
-  text-align: left;
+  /* Prevent poster from shrinking */
+  width: 90px;
+  /* Fixed width for the poster area based on image */
+  height: auto;
+  /* Height will be determined by poster's intrinsic aspect ratio */
 }
-
-.user-review-movie-info a {
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  /* Make the link also a flex container */
-  align-items: center;
-  /* Vertically align image and h4 inside the link */
-  gap: 0.8rem;
-  /* Space between image and h4 inside the link */
-}
-
 
 .user-review-movie-poster {
-  height: 90px;
+  width: 100%;
+  /* Make poster fill its wrapper */
+  height: 135px;
+  /* Fixed height for consistent look (assuming 2:3 aspect ratio) */
   border-radius: 4px;
   object-fit: cover;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow for poster */
+  transition: transform 0.2s ease;
 }
-
-/* margin-bottom: 0; /* Remove previous bottom margin if any */
 
 .user-review-movie-poster:hover {
   transform: scale(1.02);
 }
 
-.user-review-movie-info h4 {
-  margin: 0;
-  width: 150px;
-  font-size: 0.95rem;
-  color: #0077ff;
-  font-weight: 600;
-  line-height: 1.4;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  display: block;
-  margin-right: 20px;
-}
-
-/* --- Review Details --- */
-.user-review-details {
+/* --- Review Content (Right Side of Review Card) --- */
+/* This contains rating, review text, movie title, and date, all stacked */
+.user-review-content {
+  /* Renamed for clarity */
   flex: 1;
+  /* Allows content to take remaining space */
   display: flex;
   flex-direction: column;
+  /* Stacks items vertically */
   justify-content: space-between;
+  /* Pushes date to bottom */
   text-align: left;
+  min-height: 135px;
+  /* Match poster height for consistent vertical alignment */
 }
 
-.user-review-details p {
-  margin: 0.15rem 0;
-  font-size: 0.85rem;
+.user-review-content p {
+  margin: 0;
+  /* Reset default paragraph margins */
   color: #333;
 }
 
-.user-review-details p:first-of-type {
-  font-weight: 600;
+.user-review-rating {
+  font-size: 0.95rem;
+  /* Slightly smaller for 'Rating: 8' */
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 0.4rem;
+  /* Space below rating */
+}
+
+.user-review-rating .rating-value {
+  font-weight: 700;
   color: #f39c12;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
+  /* Star color */
+  font-size: 1.1rem;
+  /* Make the number slightly larger */
+  margin-right: 0.2rem;
 }
 
-.user-review-details p:nth-of-type(2) {
-  font-size: 0.96rem;
-  color: #333;
+.user-review-rating .star-icon {
+  color: #f39c12;
+  /* Star icon color */
+  font-size: 1rem;
+}
+
+.user-review-text {
+  font-size: 0.95rem;
+  /* Review text size */
   line-height: 1.4;
+  margin-bottom: 0.6rem;
+  /* Space below text */
+  color: #1a1a1a;
+}
+
+.user-review-movie-title {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-top: auto;
+  text-decoration: none;
 }
 
 .user-review-date {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  /* Date is smaller */
   color: #888;
-  font-style: normal;
-  margin-top: 0.6rem;
+  font-style: italic;
+  /* Date is italic in image */
   text-align: right;
+  /* Aligned to right */
+  margin-top: 0.4rem;
+  /* Space above date */
 }
 
 /* --- Messages (Loading, Error, Not Found) --- */
@@ -261,26 +264,45 @@ body {
   }
 
   .user-review-card {
-    flex-direction: row;
-    align-items: center;
-    padding: 0.6rem 0.8rem;
-    gap: 0.6rem;
+    padding: 0.8rem;
+    gap: 1rem;
   }
+
+  .user-review-movie-poster-wrapper {
+    width: 70px;
+  }
+
   .user-review-movie-poster {
-    height: 82px;
+    height: 105px;
   }
 
-  .user-review-movie-info h4 {
-    font-size: 0.82rem;
+  .user-review-content {
+    min-height: 105px;
   }
 
-  .user-review-details p {
-    font-size: 0.78rem;
+  .user-review-rating {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .user-review-rating .rating-value {
+    font-size: 1rem;
+  }
+
+  .user-review-text {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .user-review-movie-title {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   .user-review-date {
-    text-align: center;
-    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    margin-top: 0.3rem;
   }
 
   .profile-avatar {
@@ -305,28 +327,47 @@ body {
 
   .user-review-card {
     padding: 0.6rem;
+    gap: 0.8rem;
   }
 
-  .user-review-movie-info {
-    flex-direction: column;
-    height: auto;
+  .user-review-movie-poster-wrapper {
+    width: 50px;
+    /* Even smaller poster on small phones */
   }
 
   .user-review-movie-poster {
-    height: 60px;
+    height: 75px;
+    width: auto;
+    /* Maintain aspect ratio */
   }
 
-  .user-review-movie-info h4 {
-    width: 100px;
+  .user-review-content {
+    min-height: 75px;
+    /* Match new poster height */
+  }
+
+  .user-review-rating {
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .user-review-rating .rating-value {
+    font-size: 0.9rem;
+  }
+
+  .user-review-text {
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .user-review-movie-title {
     font-size: 0.75rem;
-  }
-
-  .user-review-details p {
-    font-size: 0.7rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   .user-review-date {
-    text-align: center;
-    margin-top: 0.4rem;
+    font-size: 0.65rem;
+    margin-top: 0.2rem;
   }
 }
