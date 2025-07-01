@@ -1,5 +1,6 @@
 import asyncHandler from '../middlewares/asyncHandler.js';
 import User from '../models/user.js';
+import Movie from '../models/Movies.js'
 import generateToken from '../utils/createToken.js';
 
 // @desc    Auth user & get token (Login)
@@ -98,7 +99,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             cloudinaryId: req.user.cloudinaryId,
             createdAt: req.user.createdAt,
             updatedAt: req.user.updatedAt,
-            token: generateToken(null, req.user._id, req.user.isAdmin), 
+            token: generateToken(null, req.user._id, req.user.isAdmin),
         });
     } else {
         res.status(404);
@@ -166,21 +167,46 @@ const getUsers = asyncHandler(async (req, res) => {
 const getUserById = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id).select('-password');
 
-    if (user) {
-        res.status(200).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            age: user.age,
-            image: user.image,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        });
-    } else {
+    if (!user) {
         res.status(404);
         throw new Error('User not found');
     }
+
+    const allMovies = await Movie.find({});
+    const userReviews = [];
+
+    allMovies.forEach((movie) => {
+        movie.reviews?.forEach((review) => {
+            if (review.user && String(review.user) === String(user._id)) {
+                userReviews.push({
+                    _id: review._id,
+                    rating: review.rating,
+                    comment: review.comment,
+                    createdAt: review.createdAt,
+                    user: review.user,
+                    movie: {
+                        _id: movie._id,
+                        title: movie.title,
+                        image: movie.image,
+                    },
+                });
+            }
+        });
+    });
+
+    userReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        age: user.age,
+        image: user.image,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        reviews: userReviews,
+    });
 });
 
 // @desc    Delete user (Admin only)
